@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>알닷 UX 역설계 리뷰 · 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0E0E10;
+  --surface: #18181C;
+  --surface2: #222228;
+  --border: rgba(255,255,255,0.08);
+  --border2: rgba(255,255,255,0.14);
+  --text: #F0EFE8;
+  --text2: #A8A79E;
+  --text3: #6A6964;
+  --accent: #C8F135;
+  --accent2: #8B5CF6;
+  --red: #FF5A5A;
+  --amber: #F5A623;
+  --green: #4ADE80;
+  --blue: #60A5FA;
+  --pink: #F472B6;
+  --r: 10px;
+  --r-sm: 6px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Pretendard', -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* ── 헤더 ── */
+.header {
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  position: sticky;
+  top: 0;
+  background: rgba(14,14,16,0.92);
+  backdrop-filter: blur(12px);
+  z-index: 100;
+}
+.header-logo {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.header-logo span {
+  background: var(--accent);
+  color: #0E0E10;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 4px;
+  letter-spacing: 0;
+}
+.header-meta {
+  font-size: 12px;
+  color: var(--text3);
+  display: flex;
+  gap: 20px;
+}
+
+/* ── 레이아웃 ── */
+.layout {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  min-height: calc(100vh - 56px);
+}
+
+/* ── 사이드바 ── */
+.sidebar {
+  border-right: 1px solid var(--border);
+  padding: 28px 0;
+  position: sticky;
+  top: 56px;
+  height: calc(100vh - 56px);
+  overflow-y: auto;
+}
+.sidebar-section {
+  padding: 0 16px;
+  margin-bottom: 24px;
+}
+.sidebar-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text3);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: 0 8px;
+  margin-bottom: 6px;
+}
+.sidebar-nav {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  color: var(--text2);
+  font-size: 13px;
+  transition: all .15s;
+  border: 1px solid transparent;
+}
+.nav-item:hover { background: var(--surface); color: var(--text); }
+.nav-item.active {
+  background: rgba(200,241,53,0.1);
+  color: var(--accent);
+  border-color: rgba(200,241,53,0.2);
+}
+.nav-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--text3);
+  flex-shrink: 0;
+}
+.nav-item.active .nav-dot { background: var(--accent); }
+
+.sidebar-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 12px 16px;
+}
+
+.status-badge {
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 20px;
+  margin-left: auto;
+}
+.status-done { background: rgba(74,222,128,0.15); color: var(--green); }
+.status-wip  { background: rgba(245,166,35,0.15); color: var(--amber); }
+.status-todo { background: rgba(255,255,255,0.07); color: var(--text3); }
+
+/* ── 메인 콘텐츠 ── */
+.main {
+  padding: 40px 48px;
+  overflow-y: auto;
+}
+
+.section { display: none; }
+.section.active { display: block; }
+
+/* ── 섹션 헤더 ── */
+.section-header {
+  margin-bottom: 32px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+.section-eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.section-title {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  margin-bottom: 10px;
+}
+.section-desc {
+  font-size: 14px;
+  color: var(--text2);
+  max-width: 560px;
+  line-height: 1.7;
+}
+
+/* ── 카드 ── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 20px 22px;
+}
+.card-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  margin-bottom: 14px;
+}
+
+/* ── 그리드 ── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+
+/* ── 메트릭 카드 ── */
+.metric-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 28px; }
+.metric-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 18px 20px;
+}
+.metric-val {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.metric-label { font-size: 12px; color: var(--text2); }
+.metric-note  { font-size: 11px; color: var(--text3); margin-top: 4px; }
+
+/* ── IA 노드 ── */
+.ia-root {
+  text-align: center;
+  margin-bottom: 0;
+}
+.ia-root-box {
+  display: inline-block;
+  background: var(--text);
+  color: var(--bg);
+  font-weight: 700;
+  font-size: 13px;
+  padding: 8px 28px;
+  border-radius: 8px;
+  position: relative;
+}
+.ia-root-box::after {
+  content: '';
+  position: absolute;
+  left: 50%; bottom: -18px;
+  width: 1px; height: 18px;
+  background: var(--border2);
+}
+.ia-line {
+  position: relative;
+  height: 1px;
+  background: var(--border2);
+  margin: 18px 6% 0;
+}
+.gnb-grid {
+  display: grid;
+  gap: 8px;
+  margin-top: 0;
+}
+.gnb-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.gnb-col::before {
+  content: '';
+  width: 1px; height: 18px;
+  background: var(--border2);
+}
+.gnb-node {
+  border-radius: var(--r-sm);
+  padding: 7px 5px;
+  font-size: 11px;
+  font-weight: 600;
+  text-align: center;
+  width: 100%;
+  border: 1.5px solid transparent;
+  line-height: 1.4;
+}
+.sub-col {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 8px;
+  width: 100%;
+  align-items: center;
+}
+.sub-col::before {
+  content: '';
+  width: 1px; height: 8px;
+  background: var(--border2);
+}
+.sub-node {
+  font-size: 10px;
+  color: var(--text3);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 3px 5px;
+  text-align: center;
+  width: 100%;
+  line-height: 1.35;
+}
+.sub-node.issue  { background: rgba(255,90,90,0.1); color: #FF8A8A; border-color: rgba(255,90,90,0.3); }
+.sub-node.new    { background: rgba(74,222,128,0.1); color: #4ADE80; border-color: rgba(74,222,128,0.25); }
+.sub-node.merged { background: rgba(96,165,250,0.1); color: #93C5FD; border-color: rgba(96,165,250,0.25); }
+
+/* gnb colors */
+.g-home    { background: rgba(96,165,250,0.12);  color: #93C5FD; border-color: rgba(96,165,250,0.3); }
+.g-plan    { background: rgba(244,114,182,0.12); color: #F9A8D4; border-color: rgba(244,114,182,0.3); }
+.g-care    { background: rgba(74,222,128,0.12);  color: #86EFAC; border-color: rgba(74,222,128,0.3); }
+.g-benefit { background: rgba(245,166,35,0.12);  color: #FCD34D; border-color: rgba(245,166,35,0.3); }
+.g-usim    { background: rgba(139,92,246,0.15);  color: #C4B5FD; border-color: rgba(139,92,246,0.35); }
+.g-support { background: rgba(255,255,255,0.07); color: var(--text2); border-color: var(--border2); }
+.g-mypage  { background: rgba(255,255,255,0.07); color: var(--text2); border-color: var(--border2); }
+
+/* ── 이슈 카드 ── */
+.issue-list { display: flex; flex-direction: column; gap: 10px; }
+.issue-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 14px 16px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  transition: border-color .15s;
+}
+.issue-card:hover { border-color: var(--border2); }
+.issue-badge {
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 4px;
+  padding: 3px 8px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.badge-high { background: rgba(255,90,90,0.15);  color: #FF7070; }
+.badge-mid  { background: rgba(245,166,35,0.15); color: #F5A623; }
+.badge-low  { background: rgba(74,222,128,0.12); color: #4ADE80; }
+.issue-title { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
+.issue-desc  { font-size: 12px; color: var(--text2); line-height: 1.6; }
+
+/* ── 탭 비교 ── */
+.compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+.compare-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 16px 18px;
+}
+.compare-title {
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.dot-red   { width:8px;height:8px;border-radius:50%;background:var(--red);flex-shrink:0; }
+.dot-green { width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0; }
+.tag-row { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
+.tag {
+  font-size: 11px;
+  border-radius: 20px;
+  padding: 3px 10px;
+  border: 1px solid var(--border2);
+  color: var(--text2);
+  background: var(--surface2);
+}
+.tag.current-active { background: rgba(255,255,255,0.1); color: var(--text); }
+.tag.removed { background: rgba(255,90,90,0.1); color: #FF8A8A; border-color: rgba(255,90,90,0.3); text-decoration: line-through; }
+.tag.added   { background: rgba(74,222,128,0.1); color: #4ADE80; border-color: rgba(74,222,128,0.25); }
+.tag.moved   { background: rgba(245,166,35,0.1); color: #FCD34D; border-color: rgba(245,166,35,0.25); }
+.tag.merged  { background: rgba(96,165,250,0.1); color: #93C5FD; border-color: rgba(96,165,250,0.25); }
+.compare-note {
+  font-size: 11px;
+  color: var(--text3);
+  line-height: 1.8;
+  border-top: 1px solid var(--border);
+  padding-top: 10px;
+  margin-top: 2px;
+}
+.compare-note .bad  { color: #FF8A8A; }
+.compare-note .good { color: #4ADE80; }
+
+/* ── 플로우 ── */
+.flow-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.flow-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 16px 18px;
+}
+.flow-title { font-size: 12px; font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+.flow-steps { display: flex; flex-direction: column; gap: 4px; }
+.f-step {
+  font-size: 11.5px;
+  border-radius: var(--r-sm);
+  padding: 7px 10px;
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  color: var(--text2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.f-step.issue  { background: rgba(255,90,90,0.08);  color: #FF8A8A; border-color: rgba(255,90,90,0.2); }
+.f-step.merged { background: rgba(96,165,250,0.08); color: #93C5FD; border-color: rgba(96,165,250,0.2); }
+.f-step.new    { background: rgba(74,222,128,0.08); color: #86EFAC; border-color: rgba(74,222,128,0.2); }
+.f-num {
+  font-size: 10px;
+  background: rgba(255,255,255,0.07);
+  padding: 1px 6px;
+  border-radius: 3px;
+  color: var(--text3);
+}
+.f-arrow { text-align: center; font-size: 10px; color: var(--text3); }
+.flow-note { font-size: 11px; color: var(--text3); line-height: 1.8; border-top: 1px solid var(--border); padding-top: 10px; margin-top: 10px; }
+
+/* ── 원칙 카드 ── */
+.principle-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.p-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 16px 18px;
+  transition: border-color .15s;
+}
+.p-card:hover { border-color: rgba(200,241,53,0.25); }
+.p-num   { font-size: 10px; color: var(--text3); margin-bottom: 4px; font-weight: 600; letter-spacing: .05em; }
+.p-title { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+.p-desc  { font-size: 12px; color: var(--text2); line-height: 1.65; }
+
+/* ── GUI 분석 ── */
+.color-row { display: flex; align-items: center; gap: 10px; margin: 6px 0; }
+.swatch { width: 22px; height: 22px; border-radius: 5px; flex-shrink: 0; border: 1px solid var(--border2); }
+.swatch-label { font-size: 12px; color: var(--text2); }
+.score-row { display: flex; align-items: center; gap: 10px; margin: 7px 0; }
+.score-name { font-size: 12px; color: var(--text2); min-width: 90px; }
+.score-bg { flex: 1; background: var(--surface2); border-radius: 3px; height: 5px; overflow: hidden; }
+.score-fill { height: 5px; border-radius: 3px; transition: width .4s ease; }
+.score-val { font-size: 12px; font-weight: 600; min-width: 32px; text-align: right; }
+
+/* ── 산출물 현황 ── */
+.deliverable-list { display: flex; flex-direction: column; gap: 8px; }
+.deliverable-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.deliverable-num {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text3);
+  min-width: 24px;
+}
+.deliverable-title { font-size: 13px; font-weight: 600; flex: 1; }
+.deliverable-desc  { font-size: 11px; color: var(--text2); margin-top: 2px; }
+
+/* ── 범례 ── */
+.legend { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border); }
+.lg-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text2); }
+.lg-dot  { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+
+/* ── 홈 히어로 ── */
+.hero {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 40px;
+  margin-bottom: 28px;
+  background: var(--surface);
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 240px; height: 240px;
+  background: radial-gradient(circle, rgba(200,241,53,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-tag {
+  display: inline-block;
+  background: rgba(200,241,53,0.12);
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid rgba(200,241,53,0.25);
+  margin-bottom: 14px;
+}
+.hero-title {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.15;
+  margin-bottom: 12px;
+}
+.hero-title em { color: var(--accent); font-style: normal; }
+.hero-sub { font-size: 14px; color: var(--text2); line-height: 1.7; max-width: 480px; }
+.hero-meta {
+  display: flex;
+  gap: 20px;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+.hero-meta-item { font-size: 12px; color: var(--text3); }
+.hero-meta-item strong { color: var(--text2); font-weight: 500; }
+
+/* ── 진행 현황 ── */
+.progress-cards { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-top: 24px; }
+.progress-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 16px 18px;
+}
+.progress-step { font-size: 10px; color: var(--text3); font-weight: 600; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 6px; }
+.progress-name { font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+.progress-items { display: flex; flex-direction: column; gap: 4px; }
+.progress-item { font-size: 11.5px; color: var(--text2); display: flex; align-items: center; gap: 6px; }
+.progress-item::before { content:''; width:5px;height:5px;border-radius:50%;background:var(--text3);flex-shrink:0; }
+.progress-item.done { color: var(--green); }
+.progress-item.done::before { background: var(--green); }
+.progress-item.wip { color: var(--amber); }
+.progress-item.wip::before { background: var(--amber); }
+
+/* ── 반응형 ── */
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
+  .main { padding: 24px 20px; }
+  .metric-grid { grid-template-columns: repeat(2,1fr); }
+  .compare-grid, .flow-grid, .grid-2, .principle-grid { grid-template-columns: 1fr; }
+  .gnb-grid { grid-template-columns: repeat(3,1fr); }
+}
+
+/* ── 애니메이션 ── */
+@keyframes fadeUp {
+  from { opacity:0; transform: translateY(12px); }
+  to   { opacity:1; transform: translateY(0); }
+}
+.section.active > * { animation: fadeUp .3s ease both; }
+.section.active > *:nth-child(2) { animation-delay: .05s; }
+.section.active > *:nth-child(3) { animation-delay: .1s; }
+.section.active > *:nth-child(4) { animation-delay: .15s; }
+
+/* ── 스크롤바 ── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--surface2); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- 헤더 -->
+<header class="header">
+  <div class="header-logo">
+    알닷 UX 역설계 <span>TEAM REVIEW</span>
+  </div>
+  <div class="header-meta">
+    <span>uplusmvno.com</span>
+    <span>2026.04</span>
+    <span>v1.0</span>
+  </div>
+</header>
+
+<div class="layout">
+
+  <!-- 사이드바 -->
+  <nav class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">개요</div>
+      <ul class="sidebar-nav">
+        <li class="nav-item active" onclick="show('home', this)">
+          <span class="nav-dot"></span> 프로젝트 개요
+          <span class="status-badge status-done">완료</span>
+        </li>
+      </ul>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">현황 분석</div>
+      <ul class="sidebar-nav">
+        <li class="nav-item" onclick="show('ia-current', this)">
+          <span class="nav-dot"></span> 현황 IA 구조
+          <span class="status-badge status-done">완료</span>
+        </li>
+        <li class="nav-item" onclick="show('ux-issues', this)">
+          <span class="nav-dot"></span> UX 이슈 진단
+          <span class="status-badge status-done">완료</span>
+        </li>
+        <li class="nav-item" onclick="show('gui', this)">
+          <span class="nav-dot"></span> GUI 분석
+          <span class="status-badge status-done">완료</span>
+        </li>
+      </ul>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">개선안</div>
+      <ul class="sidebar-nav">
+        <li class="nav-item" onclick="show('compare', this)">
+          <span class="nav-dot"></span> 현황 vs 개선 비교
+          <span class="status-badge status-done">완료</span>
+        </li>
+        <li class="nav-item" onclick="show('ia-improved', this)">
+          <span class="nav-dot"></span> 개선 IA 구조
+          <span class="status-badge status-done">완료</span>
+        </li>
+        <li class="nav-item" onclick="show('flow', this)">
+          <span class="nav-dot"></span> 가입 플로우 비교
+          <span class="status-badge status-done">완료</span>
+        </li>
+        <li class="nav-item" onclick="show('principle', this)">
+          <span class="nav-dot"></span> 개선 5대 원칙
+          <span class="status-badge status-done">완료</span>
+        </li>
+      </ul>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">발표 준비</div>
+      <ul class="sidebar-nav">
+        <li class="nav-item" onclick="show('deliverables', this)">
+          <span class="nav-dot"></span> 산출물 현황
+          <span class="status-badge status-wip">진행중</span>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- 메인 -->
+  <main class="main">
+
+    <!-- ── 프로젝트 개요 ── -->
+    <section id="home" class="section active">
+      <div class="hero">
+        <div class="hero-tag">Team Study · UX Reverse Engineering</div>
+        <h1 class="hero-title">알닷 UX 역설계<br><em>구조 개선 프로젝트</em></h1>
+        <p class="hero-sub">uplusmvno.com의 현재 IA·네비게이션·GUI 구조를 역설계하고, 사용자 관점의 문제를 진단한 뒤 개선안을 제안하는 팀 스터디 프로젝트입니다.</p>
+        <div class="hero-meta">
+          <div class="hero-meta-item"><strong>대상 사이트</strong><br>uplusmvno.com (알닷)</div>
+          <div class="hero-meta-item"><strong>분석 화면 수</strong><br>스크린샷 56개</div>
+          <div class="hero-meta-item"><strong>기술 스택</strong><br>SPA (React 계열)</div>
+          <div class="hero-meta-item"><strong>프로젝트 목적</strong><br>팀 스터디 + 발표</div>
+        </div>
+      </div>
+
+      <div class="card-title" style="margin-bottom:12px;">진행 현황</div>
+      <div class="progress-cards">
+        <div class="progress-card">
+          <div class="progress-step">Phase 1</div>
+          <div class="progress-name">현황 분석</div>
+          <div class="progress-items">
+            <div class="progress-item done">스크린샷 수집 (56개)</div>
+            <div class="progress-item done">네비게이션 구조 파악</div>
+            <div class="progress-item done">URL 기반 IA 역설계</div>
+            <div class="progress-item done">UX 이슈 6개 도출</div>
+            <div class="progress-item done">GUI 패턴 분석</div>
+          </div>
+        </div>
+        <div class="progress-card">
+          <div class="progress-step">Phase 2</div>
+          <div class="progress-name">개선안 설계</div>
+          <div class="progress-items">
+            <div class="progress-item done">현황 vs 개선 비교</div>
+            <div class="progress-item done">개선 IA 구조 설계</div>
+            <div class="progress-item done">가입 플로우 압축안</div>
+            <div class="progress-item done">개선 5대 원칙 정의</div>
+          </div>
+        </div>
+        <div class="progress-card">
+          <div class="progress-step">Phase 3</div>
+          <div class="progress-name">발표 준비</div>
+          <div class="progress-items">
+            <div class="progress-item wip">팀 리뷰 보고서 (현재)</div>
+            <div class="progress-item">와이어프레임 제작</div>
+            <div class="progress-item">발표 덱 제작</div>
+            <div class="progress-item">발표 스크립트</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 현황 IA ── -->
+    <section id="ia-current" class="section">
+      <div class="section-header">
+        <div class="section-eyebrow">Phase 1 · 현황 분석</div>
+        <h2 class="section-title">현황 IA 구조</h2>
+        <p class="section-desc">URL 경로 및 스크린샷 56개를 기반으로 역설계한 현재 정보구조입니다. 7개 1depth 구조로 탭바·햄버거 간 불일치가 발생합니다.</p>
+      </div>
+
+      <div class="metric-grid">
+        <div class="metric-card">
+          <div class="metric-val" style="color:var(--blue)">7</div>
+          <div class="metric-label">1Depth 항목 수</div>
+          <div class="metric-note">탭바 5 + 햄버거 전용 2</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-val" style="color:var(--red)">4</div>
+          <div class="metric-label">탭바·햄버거 중복</div>
+          <div class="metric-note">알닷케어·혜택·고객지원·마이</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-val" style="color:var(--amber)">13</div>
+          <div class="metric-label">가입 플로우 단계</div>
+          <div class="metric-note">subscription ×13 확인</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-val" style="color:var(--green)">56</div>
+          <div class="metric-label">수집 스크린샷</div>
+          <div class="metric-note">3개 하위폴더 + 루트</div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:20px;">
+        <div class="card-title">IA 다이어그램 — 7개 1Depth</div>
+        <div class="ia-root"><div class="ia-root-box">알닷 (uplusmvno.com)</div></div>
+        <div class="ia-line"></div>
+        <div class="gnb-grid" style="grid-template-columns:repeat(7,1fr);margin-top:0;">
+          <div class="gnb-col"><div class="gnb-node g-home">홈<br><span style="font-size:9px;opacity:.6">/home</span></div>
+            <div class="sub-col"><div class="sub-node">배너/캐러셀</div><div class="sub-node">데이터별 추천</div><div class="sub-node">주요 요금제</div><div class="sub-node issue">홈·요금제 중복</div></div>
+          </div>
+          <div class="gnb-col"><div class="gnb-node g-plan">요금제<br><span style="font-size:9px;opacity:.6">/plan</span></div>
+            <div class="sub-col"><div class="sub-node">요금제 목록</div><div class="sub-node issue">필터 과부하</div><div class="sub-node">요금제 상세</div><div class="sub-node issue">가입 13단계</div><div class="sub-node">부가서비스</div></div>
+          </div>
+          <div class="gnb-col"><div class="gnb-node g-care">알닷케어<br><span style="font-size:9px;opacity:.6">/care</span></div>
+            <div class="sub-col"><div class="sub-node">케어 메인</div><div class="sub-node">실시간 사용량</div><div class="sub-node">납부관리</div><div class="sub-node">번호/유심변경</div><div class="sub-node issue">마이와 중복</div></div>
+          </div>
+          <div class="gnb-col"><div class="gnb-node g-benefit">이벤트<br><span style="font-size:9px;opacity:.6">/benefit</span></div>
+            <div class="sub-col"><div class="sub-node">이벤트 목록</div><div class="sub-node">이벤트 상세</div><div class="sub-node issue">혜택탭 분리</div><div class="sub-node">제휴카드</div></div>
+          </div>
+          <div class="gnb-col"><div class="gnb-node g-usim">유심구매<br><span style="font-size:9px;opacity:.6">햄버거만</span></div>
+            <div class="sub-col"><div class="sub-node issue">탭 미노출</div><div class="sub-node">지금배송</div><div class="sub-node">편의점</div><div class="sub-node">원칩</div></div>
+          </div>
+          <div class="gnb-col"><div class="gnb-node g-support">고객지원<br><span style="font-size:9px;opacity:.6">햄버거만</span></div>
+            <div class="sub-col"><div class="sub-node issue">탭 미노출</div><div class="sub-node">1:1문의</div><div class="sub-node">FAQ</div><div class="sub-node">공지사항</div></div>
+          </div>
+          <div class="gnb-col"><div class="gnb-node g-mypage">마이<br><span style="font-size:9px;opacity:.6">/mypage</span></div>
+            <div class="sub-col"><div class="sub-node">신청현황</div><div class="sub-node">쿠폰함</div><div class="sub-node">관심상품</div><div class="sub-node issue">추천찾기 위치↑</div></div>
+          </div>
+        </div>
+        <div class="legend">
+          <div class="lg-item"><div class="lg-dot" style="background:rgba(255,90,90,0.3);border:1px solid rgba(255,90,90,0.5);"></div>UX 이슈</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">네비게이션 구조 이중성</div>
+        <div class="compare-grid">
+          <div class="compare-box">
+            <div class="compare-title"><span class="dot-red"></span>하단 탭바 (5개)</div>
+            <div class="tag-row">
+              <span class="tag">알닷케어</span>
+              <span class="tag">요금제</span>
+              <span class="tag current-active">홈</span>
+              <span class="tag">이벤트</span>
+              <span class="tag">마이</span>
+            </div>
+          </div>
+          <div class="compare-box">
+            <div class="compare-title"><span class="dot-red"></span>햄버거 메뉴 (7개)</div>
+            <div class="tag-row">
+              <span class="tag">유심구매</span><span class="tag">상품</span><span class="tag">인터넷</span>
+              <span class="tag">알닷케어</span><span class="tag">혜택</span><span class="tag">고객지원</span>
+              <span class="tag">마이페이지</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── UX 이슈 ── -->
+    <section id="ux-issues" class="section">
+      <div class="section-header">
+        <div class="section-eyebrow">Phase 1 · 현황 분석</div>
+        <h2 class="section-title">UX 이슈 진단</h2>
+        <p class="section-desc">스크린샷 분석을 통해 도출한 6가지 UX 문제점입니다. 심각도 기준으로 분류했습니다.</p>
+      </div>
+      <div class="issue-list">
+        <div class="issue-card">
+          <span class="issue-badge badge-high">High</span>
+          <div>
+            <p class="issue-title">네비게이션 이중 구조 혼란</p>
+            <p class="issue-desc">하단 탭바 5개 + 햄버거 메뉴 7개 항목이 중복·불일치. '유심구매'가 하단탭에 없고 햄버거에만 존재. 핵심 전환 CTA가 내비에서 누락.</p>
+          </div>
+        </div>
+        <div class="issue-card">
+          <span class="issue-badge badge-high">High</span>
+          <div>
+            <p class="issue-title">요금제 필터 과부하</p>
+            <p class="issue-desc">후불/신불 탭 + 통신사 체크박스 + 알닷ONLY/알닷워크/5G무제한 등 다중 필터가 동시 노출. 알뜰폰 첫 이용자에게 진입 장벽으로 작용.</p>
+          </div>
+        </div>
+        <div class="issue-card">
+          <span class="issue-badge badge-high">High</span>
+          <div>
+            <p class="issue-title">홈 콘텐츠 중복 및 우선순위 불명확</p>
+            <p class="issue-desc">홈에 '데이터별 추천'과 '주요 요금제'가 모두 노출. 동일 콘텐츠가 다른 레이블로 반복되어 사용자 혼란 유발.</p>
+          </div>
+        </div>
+        <div class="issue-card">
+          <span class="issue-badge badge-mid">Mid</span>
+          <div>
+            <p class="issue-title">메뉴 검색의 낮은 가시성</p>
+            <p class="issue-desc">상단 우측 '메뉴검색' 아이콘이 쿠폰함과 햄버거 사이에 묻혀 인지 어려움. 빈 상태(Empty State) UI 활용도 미흡.</p>
+          </div>
+        </div>
+        <div class="issue-card">
+          <span class="issue-badge badge-mid">Mid</span>
+          <div>
+            <p class="issue-title">알닷케어와 마이페이지 역할 모호</p>
+            <p class="issue-desc">알닷케어(하단탭)와 마이페이지(햄버거)가 가입정보·사용량·추천 등 일부 기능을 중복 제공. 사용자 입장에서 어디서 무엇을 해야 하는지 불명확.</p>
+          </div>
+        </div>
+        <div class="issue-card">
+          <span class="issue-badge badge-low">Low</span>
+          <div>
+            <p class="issue-title">요금제 카드 정보 밀도 불균형</p>
+            <p class="issue-desc">요금제 목록 카드에 별점·통신사·태그·가격·할인 등 정보 과다. 핵심 정보 위계 정리 필요.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── GUI 분석 ── -->
+    <section id="gui" class="section">
+      <div class="section-header">
+        <div class="section-eyebrow">Phase 1 · 현황 분석</div>
+        <h2 class="section-title">GUI 분석</h2>
+        <p class="section-desc">알닷의 시각 디자인 시스템, 컬러 구성, 레이아웃 패턴, UX 일관성 점수를 정리했습니다.</p>
+      </div>
+      <div class="grid-2" style="margin-bottom:16px;">
+        <div class="card">
+          <div class="card-title">컬러 시스템</div>
+          <div class="color-row"><div class="swatch" style="background:#1A1A1A;"></div><span class="swatch-label">주 텍스트 · 로고</span></div>
+          <div class="color-row"><div class="swatch" style="background:#E8003D;"></div><span class="swatch-label">Primary 강조 (핑크레드)</span></div>
+          <div class="color-row"><div class="swatch" style="background:#7B5CF0;"></div><span class="swatch-label">Secondary (퍼플)</span></div>
+          <div class="color-row"><div class="swatch" style="background:#F5F5F0;"></div><span class="swatch-label">배경 (웜그레이)</span></div>
+          <div class="color-row"><div class="swatch" style="background:#A8E6C8;"></div><span class="swatch-label">알닷ONLY 브랜드 그린</span></div>
+        </div>
+        <div class="card">
+          <div class="card-title">UX 일관성 점수</div>
+          <div class="score-row"><span class="score-name">컬러 일관성</span><div class="score-bg"><div class="score-fill" style="width:80%;background:#60A5FA;"></div></div><span class="score-val" style="color:#60A5FA">80</span></div>
+          <div class="score-row"><span class="score-name">타이포 위계</span><div class="score-bg"><div class="score-fill" style="width:65%;background:#60A5FA;"></div></div><span class="score-val" style="color:#60A5FA">65</span></div>
+          <div class="score-row"><span class="score-name">네비 일관성</span><div class="score-bg"><div class="score-fill" style="width:45%;background:var(--red);"></div></div><span class="score-val" style="color:var(--red)">45</span></div>
+          <div class="score-row"><span class="score-name">CTA 명확성</span><div class="score-bg"><div class="score-fill" style="width:55%;background:var(--amber);"></div></div><span class="score-val" style="color:var(--amber)">55</span></div>
+          <div class="score-row"><span class="score-name">정보 위계</span><div class="score-bg"><div class="score-fill" style="width:60%;background:var(--amber);"></div></div><span class="score-val" style="color:var(--amber)">60</span></div>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">레이아웃 패턴</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:7px;">
+            <li style="font-size:12px;color:var(--text2);padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:var(--text3)">·</span>카드형 리스트 UI 중심 구성</li>
+            <li style="font-size:12px;color:var(--text2);padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:var(--text3)">·</span>상단 고정 헤더 + 하단 탭바</li>
+            <li style="font-size:12px;color:var(--text2);padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:var(--text3)">·</span>홈 최상단 배너 캐러셀</li>
+            <li style="font-size:12px;color:var(--text2);padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:var(--text3)">·</span>요금제 2단 탭 필터</li>
+            <li style="font-size:12px;color:var(--text2);padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:var(--text3)">·</span>아이콘+텍스트 쇼트컷 (케어)</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title">브랜드 특이점</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:7px;">
+            <li style="font-size:12px;color:var(--text2);padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:var(--text3)">·</span>캐릭터 '모나' 적극 활용</li>
+            <li style="font-size:12px;color:var(--text2);padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:var(--text3)">·</span>알닷ONLY 그린 배지 브랜딩</li>
+            <li style="font-size:12px;color:var(--text2);padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:var(--text3)">·</span>LG U+ 연계 로고 병기</li>
+            <li style="font-size:12px;color:var(--text2);padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:var(--text3)">·</span>폰트: 고딕 계열 (둥근 형태)</li>
+            <li style="font-size:12px;color:var(--text2);padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:var(--text3)">·</span>아이콘: 선형(outline) 스타일</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 현황 vs 개선 비교 ── -->
+    <section id="compare" class="section">
+      <div class="section-header">
+        <div class="section-eyebrow">Phase 2 · 개선안</div>
+        <h2 class="section-title">현황 vs 개선 비교</h2>
+        <p class="section-desc">네비게이션 구조, 핵심 기능 위치, 정보 통합 방향을 현황과 개선안으로 나란히 비교합니다.</p>
+      </div>
+
+      <div class="card-title" style="margin-bottom:10px;">하단 탭바 구조 변경</div>
+      <div class="compare-grid" style="margin-bottom:20px;">
+        <div class="compare-box">
+          <div class="compare-title"><span class="dot-red"></span>현황 — 5개 탭</div>
+          <div class="tag-row">
+            <span class="tag">알닷케어</span><span class="tag">요금제</span>
+            <span class="tag current-active">홈</span>
+            <span class="tag">이벤트</span><span class="tag">마이</span>
+          </div>
+          <div class="compare-note">
+            <span class="bad">· 유심구매 — 탭 없음, 햄버거 전용</span><br>
+            <span class="bad">· 고객지원 — 탭 없음, 햄버거 전용</span><br>
+            <span class="bad">· 이벤트 독립탭 — 혜택과 중복</span>
+          </div>
+        </div>
+        <div class="compare-box">
+          <div class="compare-title"><span class="dot-green"></span>개선안 — 5개 탭 재구성</div>
+          <div class="tag-row">
+            <span class="tag current-active">홈</span><span class="tag">요금제</span>
+            <span class="tag added">유심구매 ↑</span>
+            <span class="tag merged">혜택 ←통합</span><span class="tag">마이</span>
+          </div>
+          <div class="compare-note">
+            <span class="good">· 유심구매 탭 격상 (핵심 전환 노출)</span><br>
+            <span class="good">· 이벤트 → 혜택 탭으로 통합</span><br>
+            <span class="good">· 알닷케어 → 마이 탭 내부로 이동</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-title" style="margin-bottom:10px;">햄버거 메뉴 역할 분리</div>
+      <div class="compare-grid" style="margin-bottom:20px;">
+        <div class="compare-box">
+          <div class="compare-title"><span class="dot-red"></span>현황 — 탭과 4개 중복</div>
+          <div class="tag-row">
+            <span class="tag removed">유심구매</span><span class="tag">상품</span>
+            <span class="tag">인터넷</span><span class="tag removed">알닷케어</span>
+            <span class="tag removed">혜택</span><span class="tag">고객지원</span>
+            <span class="tag removed">마이페이지</span>
+          </div>
+          <div class="compare-note">
+            <span class="bad">· 하단탭 4개 항목 그대로 중복</span><br>
+            <span class="bad">· 전체 구조 탐색 기능 없음</span>
+          </div>
+        </div>
+        <div class="compare-box">
+          <div class="compare-title"><span class="dot-green"></span>개선안 — 보조 기능 전용</div>
+          <div class="tag-row">
+            <span class="tag">상품 전체</span><span class="tag">인터넷/IPTV</span>
+            <span class="tag moved">고객지원 ↓</span>
+            <span class="tag moved">공지사항</span><span class="tag">설정</span>
+          </div>
+          <div class="compare-note">
+            <span class="good">· 탭 중복 항목 완전 제거</span><br>
+            <span class="good">· 보조 기능·설정 전용으로 역할 확립</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-title" style="margin-bottom:10px;">핵심 기능 위치 변경</div>
+      <div class="compare-grid">
+        <div class="compare-box">
+          <div class="compare-title"><span class="dot-red"></span>현황 — 위치 부적절</div>
+          <div class="compare-note" style="border:none;padding:0;margin:0;">
+            <span class="bad">· 내게맞는요금제 → /mypage/recommand</span><br>
+            <span class="bad">· 알닷케어 → 하단탭 독립 (과도한 비중)</span><br>
+            <span class="bad">· 가입 플로우 → 13단계</span><br>
+            <span class="bad">· 부가서비스 → /plan과 /care 양쪽 산재</span>
+          </div>
+        </div>
+        <div class="compare-box">
+          <div class="compare-title"><span class="dot-green"></span>개선안 — 맥락 기반 배치</div>
+          <div class="compare-note" style="border:none;padding:0;margin:0;">
+            <span class="good">· 내게맞는요금제 → /plan 진입부로 이동</span><br>
+            <span class="good">· 알닷케어 → 마이 탭 서브 영역</span><br>
+            <span class="good">· 가입 플로우 → 8단계로 압축</span><br>
+            <span class="good">· 부가서비스 → /plan 단일 경로 통일</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="legend">
+        <div class="lg-item"><div class="lg-dot" style="background:rgba(255,90,90,0.3);border:1px solid rgba(255,90,90,0.5);"></div>제거/문제</div>
+        <div class="lg-item"><div class="lg-dot" style="background:rgba(74,222,128,0.2);border:1px solid rgba(74,222,128,0.4);"></div>신규 추가</div>
+        <div class="lg-item"><div class="lg-dot" style="background:rgba(245,166,35,0.2);border:1px solid rgba(245,166,35,0.4);"></div>위치 이동</div>
+        <div class="lg-item"><div class="lg-dot" style="background:rgba(96,165,250,0.2);border:1px solid rgba(96,165,250,0.4);"></div>통합/병합</div>
+      </div>
+    </section>
+
+    <!-- ── 개선 IA ── -->
+    <section id="ia-improved" class="section">
+      <div class="section-header">
+        <div class="section-eyebrow">Phase 2 · 개선안</div>
+        <h2 class="section-title">개선 IA 구조</h2>
+        <p class="section-desc">7개 1depth를 5개로 재구성. 탭바·햄버거 역할을 분리하고, 유사 기능을 통합했습니다.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">개선 IA 다이어그램 — 5개 1Depth</div>
+        <div class="ia-root"><div class="ia-root-box">알닷 (uplusmvno.com)</div></div>
+        <div class="ia-line"></div>
+        <div class="gnb-grid" style="grid-template-columns:repeat(5,1fr);margin-top:0;">
+          <div class="gnb-col"><div class="gnb-node g-home">홈<br><span style="font-size:9px;opacity:.6">/home</span></div>
+            <div class="sub-col"><div class="sub-node new">배너 (1개 핵심)</div><div class="sub-node new">퀵메뉴 쇼트컷</div><div class="sub-node new">추천요금제 진입</div><div class="sub-node new">알닷ONLY 혜택</div><div class="sub-node">파트너스</div></div>
+          </div>
+          <div class="gnb-col"><div class="gnb-node g-plan">요금제<br><span style="font-size:9px;opacity:.6">/plan</span></div>
+            <div class="sub-col"><div class="sub-node new">내게맞는요금제 ↓</div><div class="sub-node merged">필터 단순화</div><div class="sub-node">요금제 목록</div><div class="sub-node">요금제 상세</div><div class="sub-node merged">부가서비스 통합</div><div class="sub-node new">가입 8단계 ↓</div></div>
+          </div>
+          <div class="gnb-col"><div class="gnb-node g-usim">유심구매<br><span style="font-size:9px;opacity:.6">/usim ↑탭격상</span></div>
+            <div class="sub-col"><div class="sub-node new">탭 직접 진입</div><div class="sub-node">지금배송</div><div class="sub-node">편의점 구매</div><div class="sub-node">원칩 구매</div><div class="sub-node new">eSIM 구매</div></div>
+          </div>
+          <div class="gnb-col"><div class="gnb-node g-benefit">혜택<br><span style="font-size:9px;opacity:.6">/benefit ←통합</span></div>
+            <div class="sub-col"><div class="sub-node merged">이벤트 통합 ↓</div><div class="sub-node">알닷ONLY</div><div class="sub-node">제휴카드</div><div class="sub-node">파트너스</div><div class="sub-node">당첨자 발표</div></div>
+          </div>
+          <div class="gnb-col"><div class="gnb-node g-mypage">마이<br><span style="font-size:9px;opacity:.6">/mypage</span></div>
+            <div class="sub-col"><div class="sub-node merged">알닷케어 통합 ↓</div><div class="sub-node">신청현황</div><div class="sub-node">쿠폰함</div><div class="sub-node">납부관리</div><div class="sub-node">번호/유심변경</div><div class="sub-node">1:1문의</div><div class="sub-node new">고객지원 진입</div></div>
+          </div>
+        </div>
+        <div class="legend">
+          <div class="lg-item"><div class="lg-dot" style="background:rgba(74,222,128,0.2);border:1px solid rgba(74,222,128,0.4);"></div>신규/이동</div>
+          <div class="lg-item"><div class="lg-dot" style="background:rgba(96,165,250,0.2);border:1px solid rgba(96,165,250,0.4);"></div>통합/병합</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 가입 플로우 ── -->
+    <section id="flow" class="section">
+      <div class="section-header">
+        <div class="section-eyebrow">Phase 2 · 개선안</div>
+        <h2 class="section-title">가입 플로우 비교</h2>
+        <p class="section-desc">현황 13단계에서 8단계로 압축. 관련 입력 단계를 묶고 중복 확인 화면을 제거했습니다.</p>
+      </div>
+      <div class="flow-grid">
+        <div class="flow-box">
+          <div class="flow-title"><span class="dot-red"></span>현황 — 13단계</div>
+          <div class="flow-steps">
+            <div class="f-step">요금제 선택 <span class="f-num">1</span></div>
+            <div class="f-arrow">↓</div>
+            <div class="f-step">본인인증 <span class="f-num">2</span></div>
+            <div class="f-arrow">↓</div>
+            <div class="f-step">유심방식 선택 <span class="f-num">3</span></div>
+            <div class="f-arrow">↓</div>
+            <div class="f-step issue">배송정보 입력 <span class="f-num">4</span></div>
+            <div class="f-arrow">↓</div>
+            <div class="f-step">번호 선택 <span class="f-num">5</span></div>
+            <div class="f-arrow">↓</div>
+            <div class="f-step">부가서비스 선택 <span class="f-num">6</span></div>
+            <div class="f-arrow">↓</div>
+            <div class="f-step issue">약관동의 (분리) <span class="f-num">7</span></div>
+            <div class="f-arrow">↓</div>
+            <div class="f-step issue">결제정보 입력 <span class="f-num">8</span></div>
+            <div class="f-arrow">↓</div>
+            <div class="f-step issue">최종확인 ×5 <span class="f-num">9-13</span></div>
+            <div class="f-arrow">↓</div>
+            <div class="f-step">완료 <span class="f-num">—</span></div>
+          </div>
+          <div class="flow-note">· 최종확인 화면 5개 반복<br>· 약관·결제 단계 과다 분리<br>· 중간 이탈 위험 구간 다수</div>
+        </div>
+        <div class="flow-box">
+          <div class="flow-title"><span class="dot-green"></span>개선안 — 8단계</div>
+          <div class="flow-steps">
+            <div class="f-step new">요금제 선택 <span class="f-num">1</span></div>
+            <div class="f-arrow">↓</div>
+            <div class="f-step new">본인인증 <span class="f-num">2</span></div>
+            <div class="f-arrow">↓</div>
+            <div class="f-step merged">유심 + 번호 통합 <span class="f-num">3</span></div>
+            <div class="f-arrow">↓</div>
+            <div class="f-step merged">배송 + 부가 통합 <span class="f-num">4</span></div>
+            <div class="f-arrow">↓</div>
+            <div class="f-step merged">약관 + 결제 통합 <span class="f-num">5</span></div>
+            <div class="f-arrow">↓</div>
+            <div class="f-step new">최종 요약 확인 <span class="f-num">6</span></div>
+            <div class="f-arrow">↓</div>
+            <div class="f-step new">완료 + 케어 진입 유도 <span class="f-num">7</span></div>
+          </div>
+          <div class="flow-note">· 관련 입력 단계 묶어서 압축<br>· 최종확인 1개로 통합<br>· 완료 후 케어 바로 진입 유도</div>
+        </div>
+      </div>
+
+      <div style="margin-top:20px;" class="card">
+        <div class="card-title">내게맞는 요금제 찾기 — 위치 이동</div>
+        <div class="compare-grid">
+          <div class="compare-box">
+            <div class="compare-title"><span class="dot-red"></span>현황 — /mypage/recommand</div>
+            <div class="compare-note" style="border:none;padding:0;margin:0;">
+              <span class="bad">· 마이페이지 하위에 위치 (발견 어려움)</span><br>
+              <span class="bad">· 요금제를 찾으러 가는 사용자가 마이페이지를 방문해야 하는 구조</span><br>
+              <span class="bad">· 9단계 진입 후 결과 도달</span>
+            </div>
+          </div>
+          <div class="compare-box">
+            <div class="compare-title"><span class="dot-green"></span>개선안 — /plan 진입부</div>
+            <div class="compare-note" style="border:none;padding:0;margin:0;">
+              <span class="good">· 요금제 탭 최상단 진입 배너로 노출</span><br>
+              <span class="good">· 홈 퀵메뉴에서도 바로 진입 가능</span><br>
+              <span class="good">· 결과 → 요금제 상세 직접 연결</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 개선 원칙 ── -->
+    <section id="principle" class="section">
+      <div class="section-header">
+        <div class="section-eyebrow">Phase 2 · 개선안</div>
+        <h2 class="section-title">개선 5대 원칙</h2>
+        <p class="section-desc">이번 개선안 전체를 관통하는 설계 원칙입니다. 발표 시 근거 자료로 활용할 수 있습니다.</p>
+      </div>
+      <div class="principle-grid">
+        <div class="p-card">
+          <div class="p-num">원칙 01</div>
+          <div class="p-title">핵심 전환은 탭으로</div>
+          <div class="p-desc">유심구매(신규 가입)는 서비스의 핵심 전환 액션. 하단탭에 반드시 노출해야 전환율을 높일 수 있다.</div>
+        </div>
+        <div class="p-card">
+          <div class="p-num">원칙 02</div>
+          <div class="p-title">탭바 ↔ 햄버거 역할 분리</div>
+          <div class="p-desc">탭바 = 핵심 5개 기능. 햄버거 = 보조 기능·설정·전체메뉴. 중복 배제로 사용자 혼란을 줄인다.</div>
+        </div>
+        <div class="p-card">
+          <div class="p-num">원칙 03</div>
+          <div class="p-title">유사 기능은 통합</div>
+          <div class="p-desc">이벤트+혜택 통합, 알닷케어+마이 통합, 부가서비스 경로 단일화로 중복 구조를 해소한다.</div>
+        </div>
+        <div class="p-card">
+          <div class="p-num">원칙 04</div>
+          <div class="p-title">기능은 맥락에 맞는 위치에</div>
+          <div class="p-desc">요금제 추천 찾기는 /plan 진입부로 이동. 기능과 위치가 사용자의 멘탈모델과 일치해야 한다.</div>
+        </div>
+        <div class="p-card" style="grid-column: span 2;">
+          <div class="p-num">원칙 05</div>
+          <div class="p-title">가입 플로우는 압축하라</div>
+          <div class="p-desc">13단계 → 8단계. 관련 입력 단계 묶기, 중복 확인 제거, 완료 후 온보딩 연결. 플로우가 길수록 이탈률이 높아진다. 각 단계를 줄이는 것이 전환율 개선의 가장 직접적인 방법이다.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 산출물 현황 ── -->
+    <section id="deliverables" class="section">
+      <div class="section-header">
+        <div class="section-eyebrow">Phase 3 · 발표 준비</div>
+        <h2 class="section-title">산출물 현황</h2>
+        <p class="section-desc">프로젝트 전체 산출물 목록과 현재 진행 상황입니다.</p>
+      </div>
+      <div class="deliverable-list">
+        <div class="deliverable-item">
+          <div class="deliverable-num">01</div>
+          <div style="flex:1;"><div class="deliverable-title">현황 IA 다이어그램</div><div class="deliverable-desc">URL 기반 역설계 · 7개 1depth · 이슈 레이블 포함</div></div>
+          <span class="status-badge status-done">완료</span>
+        </div>
+        <div class="deliverable-item">
+          <div class="deliverable-num">02</div>
+          <div style="flex:1;"><div class="deliverable-title">UX 감사 리포트</div><div class="deliverable-desc">6개 이슈 · High/Mid/Low 심각도 분류</div></div>
+          <span class="status-badge status-done">완료</span>
+        </div>
+        <div class="deliverable-item">
+          <div class="deliverable-num">03</div>
+          <div style="flex:1;"><div class="deliverable-title">GUI 분석 보고서</div><div class="deliverable-desc">컬러 시스템 · UX 일관성 점수 · 브랜드 특이점</div></div>
+          <span class="status-badge status-done">완료</span>
+        </div>
+        <div class="deliverable-item">
+          <div class="deliverable-num">04</div>
+          <div style="flex:1;"><div class="deliverable-title">현황 vs 개선 비교 문서</div><div class="deliverable-desc">탭바·햄버거·기능위치 3개 영역 비교</div></div>
+          <span class="status-badge status-done">완료</span>
+        </div>
+        <div class="deliverable-item">
+          <div class="deliverable-num">05</div>
+          <div style="flex:1;"><div class="deliverable-title">개선 IA 다이어그램</div><div class="deliverable-desc">5개 1depth 재구성 · 통합/이동/신규 레이블</div></div>
+          <span class="status-badge status-done">완료</span>
+        </div>
+        <div class="deliverable-item">
+          <div class="deliverable-num">06</div>
+          <div style="flex:1;"><div class="deliverable-title">가입 플로우 비교 (13→8단계)</div><div class="deliverable-desc">단계 압축 근거 포함 · 내게맞는요금제 위치 이동</div></div>
+          <span class="status-badge status-done">완료</span>
+        </div>
+        <div class="deliverable-item">
+          <div class="deliverable-num">07</div>
+          <div style="flex:1;"><div class="deliverable-title">팀 리뷰 보고서 (현재 파일)</div><div class="deliverable-desc">HTML 인터랙티브 · 사이드바 네비게이션</div></div>
+          <span class="status-badge status-wip">진행중</span>
+        </div>
+        <div class="deliverable-item">
+          <div class="deliverable-num">08</div>
+          <div style="flex:1;"><div class="deliverable-title">개선안 와이어프레임</div><div class="deliverable-desc">홈·요금제·유심구매 주요 3페이지</div></div>
+          <span class="status-badge status-todo">예정</span>
+        </div>
+        <div class="deliverable-item">
+          <div class="deliverable-num">09</div>
+          <div style="flex:1;"><div class="deliverable-title">발표 덱 (PPT/Canva)</div><div class="deliverable-desc">현황→문제→개선→기대효과 스토리라인</div></div>
+          <span class="status-badge status-todo">예정</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+function show(id, el) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if (el) el.classList.add('active');
+}
+</script>
+</body>
+</html>

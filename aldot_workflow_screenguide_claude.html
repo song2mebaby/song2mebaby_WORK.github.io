@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>알닷 개편 — 워크플로우 & 스크린가이드</title>
+<link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F0EEE8;--sur:#FAFAF7;--sur2:#EEECEA;
+  --bd:rgba(0,0,0,0.09);--bd2:rgba(0,0,0,0.16);
+  --tx:#1A1A1A;--tx2:#6A6860;--tx3:#A8A49E;
+  --pk:#E8003D;--grn:#2DBF7A;--amb:#F5A623;--blu:#3B82F6;--pur:#7B5CF0;
+  --acc:#C8F135;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Pretendard',-apple-system,sans-serif;background:var(--bg);color:var(--tx);font-size:13px;line-height:1.6;}
+
+/* ── 헤더 ── */
+.hdr{background:var(--tx);padding:0 36px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;}
+.hdr-logo{font-size:14px;font-weight:700;color:#fff;display:flex;align-items:center;gap:8px;}
+.hdr-logo b{background:var(--acc);color:var(--tx);font-size:10px;padding:2px 7px;border-radius:3px;}
+.hdr-nav{display:flex;gap:3px;}
+.hn{font-size:11px;font-weight:600;padding:6px 14px;border-radius:5px;border:1px solid rgba(255,255,255,0.15);background:transparent;color:rgba(255,255,255,0.45);cursor:pointer;transition:all .15s;white-space:nowrap;}
+.hn:hover{background:rgba(255,255,255,0.08);color:#fff;}
+.hn.on{background:#fff;color:var(--tx);border-color:#fff;}
+
+/* ── 레이아웃 ── */
+.body{max-width:1400px;margin:0 auto;padding:36px 32px 80px;}
+.sec{display:none;}
+.sec.on{display:block;}
+.sec-title{font-size:22px;font-weight:800;letter-spacing:-.03em;margin-bottom:6px;}
+.sec-sub{font-size:13px;color:var(--tx2);margin-bottom:28px;}
+
+/* ── 플로우 다이어그램 공통 ── */
+.flow-wrap{background:var(--sur);border:1px solid var(--bd);border-radius:14px;padding:28px 32px;margin-bottom:20px;overflow-x:auto;}
+.flow-title{font-size:14px;font-weight:700;margin-bottom:20px;display:flex;align-items:center;gap:8px;}
+.flow-tag{font-size:10px;font-weight:700;border-radius:4px;padding:2px 8px;}
+.ft-wf{background:rgba(59,130,246,0.1);color:#1456A0;}
+.ft-ux{background:rgba(45,191,122,0.1);color:#1A6B3A;}
+.ft-sys{background:rgba(123,92,240,0.1);color:#5B2FCC;}
+
+/* 수평 플로우 */
+.hflow{display:flex;align-items:center;gap:0;flex-wrap:nowrap;min-width:max-content;}
+.hf-step{display:flex;flex-direction:column;align-items:center;gap:0;}
+.hf-box{border-radius:10px;padding:10px 14px;text-align:center;min-width:100px;max-width:130px;border:1.5px solid var(--bd);background:var(--sur2);}
+.hf-box.start{background:var(--tx);color:#fff;border-color:var(--tx);}
+.hf-box.end{background:var(--tx);color:#fff;border-color:var(--tx);}
+.hf-box.action{background:#fff;border-color:var(--bd2);}
+.hf-box.decision{background:#FFF8EC;border-color:#F5D080;transform:rotate(0deg);}
+.hf-box.system{background:rgba(59,130,246,0.07);border-color:rgba(59,130,246,0.25);}
+.hf-box.improved{background:rgba(45,191,122,0.08);border-color:rgba(45,191,122,0.3);}
+.hf-box.issue{background:rgba(232,0,61,0.06);border-color:rgba(232,0,61,0.2);}
+.hf-t{font-size:11px;font-weight:600;color:var(--tx);line-height:1.35;}
+.hf-s{font-size:9.5px;color:var(--tx3);margin-top:3px;line-height:1.3;}
+.hf-box.start .hf-t,.hf-box.end .hf-t{color:#fff;}
+.hf-arr{font-size:18px;color:var(--tx3);padding:0 6px;flex-shrink:0;}
+.hf-arr-down{font-size:16px;color:var(--tx3);text-align:center;margin:4px 0;}
+.hf-branch{display:flex;gap:10px;margin-top:4px;}
+
+/* 수직 플로우 */
+.vflow{display:flex;flex-direction:column;gap:0;}
+.vf-row{display:flex;align-items:stretch;gap:16px;}
+.vf-step-col{display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:36px;}
+.vf-dot{width:32px;height:32px;border-radius:50%;background:var(--tx);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;z-index:1;}
+.vf-dot.grn{background:var(--grn);}
+.vf-dot.pk{background:var(--pk);}
+.vf-dot.amb{background:var(--amb);}
+.vf-dot.blu{background:var(--blu);}
+.vf-line{width:2px;flex:1;background:var(--bd2);margin:4px auto;}
+.vf-content{flex:1;padding-bottom:20px;}
+.vf-title{font-size:13px;font-weight:700;margin-bottom:4px;}
+.vf-desc{font-size:11.5px;color:var(--tx2);line-height:1.6;}
+.vf-tags{display:flex;gap:5px;margin-top:6px;flex-wrap:wrap;}
+.vf-tag{font-size:10px;border-radius:4px;padding:2px 7px;font-weight:600;}
+.vt-grn{background:rgba(45,191,122,0.1);color:#1A6B3A;}
+.vt-pk{background:rgba(232,0,61,0.08);color:var(--pk);}
+.vt-amb{background:rgba(245,166,35,0.1);color:#8A5200;}
+.vt-blu{background:rgba(59,130,246,0.1);color:#1456A0;}
+
+/* ── 섹션 구분선 ── */
+.flow-divider{height:1px;background:var(--bd);margin:28px 0;}
+.flow-subtitle{font-size:16px;font-weight:700;margin:24px 0 14px;display:flex;align-items:center;gap:8px;}
+.flow-subtitle::before{content:'';width:4px;height:18px;background:var(--tx);border-radius:2px;}
+
+/* 비교 그리드 */
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;}
+.cbox{background:var(--sur);border:1px solid var(--bd);border-radius:12px;padding:18px 20px;}
+.cbox-title{font-size:12px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:6px;}
+.dot-r{width:8px;height:8px;border-radius:50%;background:var(--pk);}
+.dot-g{width:8px;height:8px;border-radius:50%;background:var(--grn);}
+
+/* ── 스크린 가이드 ── */
+.sg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px;}
+.sg-card{background:var(--sur);border:1px solid var(--bd);border-radius:14px;overflow:hidden;}
+.sg-card-head{padding:16px 18px 12px;border-bottom:1px solid var(--bd);}
+.sg-card-id{font-size:10px;font-weight:600;color:var(--tx3);margin-bottom:4px;}
+.sg-card-title{font-size:15px;font-weight:700;}
+.sg-card-path{font-size:11px;color:var(--tx3);margin-top:3px;font-family:monospace;}
+.sg-card-body{padding:14px 18px;}
+.sg-section{margin-bottom:12px;}
+.sg-sec-title{font-size:10px;font-weight:700;color:var(--tx3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;}
+.sg-item{font-size:12px;color:var(--tx2);padding-left:12px;position:relative;margin-bottom:3px;line-height:1.5;}
+.sg-item::before{content:'·';position:absolute;left:0;color:var(--tx3);}
+.sg-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:8px;}
+.sg-tag{font-size:10px;font-weight:600;border-radius:4px;padding:2px 7px;}
+.sg-t-new{background:rgba(45,191,122,0.1);color:#1A6B3A;}
+.sg-t-fix{background:rgba(232,0,61,0.08);color:var(--pk);}
+.sg-t-mv{background:rgba(245,166,35,0.1);color:#8A5200;}
+.sg-t-mg{background:rgba(59,130,246,0.1);color:#1456A0;}
+.sg-card-foot{padding:10px 18px;border-top:1px solid var(--bd);background:var(--sur2);display:flex;gap:6px;flex-wrap:wrap;}
+.sg-comp{font-size:10px;background:var(--sur);border:1px solid var(--bd);border-radius:4px;padding:2px 7px;color:var(--tx2);}
+
+/* 범례 */
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:20px;padding:12px 16px;background:var(--sur);border:1px solid var(--bd);border-radius:9px;}
+.lg-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--tx2);}
+.lg-swatch{width:14px;height:14px;border-radius:3px;flex-shrink:0;}
+
+@media(max-width:900px){
+  .compare-grid{grid-template-columns:1fr;}
+  .hflow{overflow-x:auto;}
+  .body{padding:24px 16px 60px;}
+  .hn{padding:5px 9px;font-size:10px;}
+}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-logo">알닷 개편 <b>산출물</b></div>
+  <div class="hdr-nav">
+    <button class="hn on" onclick="show('wf-all',this)">전체 워크플로우</button>
+    <button class="hn" onclick="show('wf-key',this)">핵심 기능 플로우</button>
+    <button class="hn" onclick="show('sg',this)">스크린 가이드</button>
+  </div>
+</div>
+
+<div class="body">
+
+<!-- ════ 전체 워크플로우 ════ -->
+<div id="wf-all" class="sec on">
+  <div class="sec-title">전체 워크플로우</div>
+  <div class="sec-sub">알닷 개편안 기준 — 사용자 주요 경로 전체 흐름</div>
+
+  <!-- 범례 -->
+  <div class="legend">
+    <div class="lg-item"><div class="lg-swatch" style="background:var(--tx);"></div>시작/종료</div>
+    <div class="lg-item"><div class="lg-swatch" style="background:#fff;border:1px solid var(--bd2);"></div>사용자 액션</div>
+    <div class="lg-item"><div class="lg-swatch" style="background:rgba(59,130,246,0.12);border:1px solid rgba(59,130,246,0.3);"></div>시스템 처리</div>
+    <div class="lg-item"><div class="lg-swatch" style="background:rgba(45,191,122,0.1);border:1px solid rgba(45,191,122,0.3);"></div>개선 포인트</div>
+    <div class="lg-item"><div class="lg-swatch" style="background:#FFF8EC;border:1px solid #F5D080;"></div>분기/판단</div>
+    <div class="lg-item"><div class="lg-swatch" style="background:rgba(232,0,61,0.06);border:1px solid rgba(232,0,61,0.2);"></div>현행 이슈 구간</div>
+  </div>
+
+  <!-- 1. 서비스 진입 -->
+  <div class="flow-subtitle">1. 서비스 진입 및 홈 탐색</div>
+  <div class="flow-wrap">
+    <div class="flow-title">홈 진입 플로우 <span class="flow-tag ft-ux">UX Flow</span></div>
+    <div class="hflow">
+      <div class="hf-step"><div class="hf-box start"><div class="hf-t">앱/웹 진입</div></div></div>
+      <div class="hf-arr">›</div>
+      <div class="hf-step"><div class="hf-box system"><div class="hf-t">홈 화면 로딩</div><div class="hf-s">배너·퀵메뉴·인기요금제</div></div></div>
+      <div class="hf-arr">›</div>
+      <div class="hf-step"><div class="hf-box decision"><div class="hf-t">목적 선택</div><div class="hf-s">퀵메뉴 4종</div></div></div>
+      <div class="hf-arr">›</div>
+      <div class="hf-step">
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div class="hf-box improved"><div class="hf-t">요금제 찾기</div></div>
+          <div class="hf-box improved"><div class="hf-t">유심 구매</div></div>
+          <div class="hf-box improved"><div class="hf-t">사용량 확인</div></div>
+          <div class="hf-box improved"><div class="hf-t">혜택 보기</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. 요금제 탐색 -->
+  <div class="flow-subtitle">2. 요금제 탐색 → 가입</div>
+  <div class="flow-wrap">
+    <div class="flow-title">요금제 탐색·선택·가입 플로우 <span class="flow-tag ft-ux">UX Flow</span></div>
+    <div class="hflow">
+      <div class="hf-step"><div class="hf-box start"><div class="hf-t">요금제 탭 진입</div></div></div>
+      <div class="hf-arr">›</div>
+      <div class="hf-step"><div class="hf-box improved"><div class="hf-t">추천 배너</div><div class="hf-s">내게맞는 요금제↑</div></div></div>
+      <div class="hf-arr">›</div>
+      <div class="hf-step"><div class="hf-box decision"><div class="hf-t">탐색 방식</div></div></div>
+      <div class="hf-arr">›</div>
+      <div class="hf-step">
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div class="hf-box improved"><div class="hf-t">추천 플로우</div><div class="hf-s">9단계 설문</div></div>
+          <div class="hf-box action"><div class="hf-t">직접 탐색</div><div class="hf-s">칩 필터 선택</div></div>
+        </div>
+      </div>
+      <div class="hf-arr">›</div>
+      <div class="hf-step"><div class="hf-box action"><div class="hf-t">요금제 목록</div><div class="hf-s">카드형 리스트</div></div></div>
+      <div class="hf-arr">›</div>
+      <div class="hf-step"><div class="hf-box action"><div class="hf-t">요금제 상세</div><div class="hf-s">탭 구조 정보</div></div></div>
+      <div class="hf-arr">›</div>
+      <div class="hf-step"><div class="hf-box improved"><div class="hf-t">가입하기 CTA</div><div class="hf-s">상단 고정 버튼</div></div></div>
+      <div class="hf-arr">›</div>
+      <div class="hf-step"><div class="hf-box improved"><div class="hf-t">가입 플로우</div><div class="hf-s">7단계 (개선)</div></div></div>
+      <div class="hf-arr">›</div>
+      <div class="hf-step"><div class="hf-box end"><div class="hf-t">가입 완료</div><div class="hf-s">케어 온보딩↗</div></div></div>
+    </div>
+  </div>
+
+  <!-- 가입 플로우 상세 비교 -->
+  <div class="compare-grid">
+    <div class="cbox">
+      <div class="cbox-title"><span class="dot-r"></span>현행 가입 플로우 — 13단계</div>
+      <div class="vflow">
+        <div class="vf-row"><div class="vf-step-col"><div class="vf-dot">1</div><div class="vf-line"></div></div><div class="vf-content"><div class="vf-title">요금제 선택</div></div></div>
+        <div class="vf-row"><div class="vf-step-col"><div class="vf-dot">2</div><div class="vf-line"></div></div><div class="vf-content"><div class="vf-title">본인인증</div></div></div>
+        <div class="vf-row"><div class="vf-step-col"><div class="vf-dot">3</div><div class="vf-line"></div></div><div class="vf-content"><div class="vf-title">유심방식 선택</div></div></div>
+        <div class="vf-row"><div class="vf-step-col"><div class="vf-dot" style="background:var(--pk);">4</div><div class="vf-line"></div></div><div class="vf-content"><div class="vf-title" style="color:var(--pk);">배송정보 입력 (분리)</div></div></div>
+        <div class="vf-row"><div class="vf-step-col"><div class="vf-dot">5</div><div class="vf-line"></div></div><div class="vf-content"><div class="vf-title">번호 선택</div></div></div>
+        <div class="vf-row"><div class="vf-step-col"><div class="vf-dot">6</div><div class="vf-line"></div></div><div class="vf-content"><div class="vf-title">부가서비스 선택</div></div></div>
+        <div class="vf-row"><div class="vf-step-col"><div class="vf-dot" style="background:var(--pk);">7</div><div class="vf-line"></div></div><div class="vf-content"><div class="vf-title" style="color:var(--pk);">약관동의 (분리)</div></div></div>
+        <div class="vf-row"><div class="vf-step-col"><div class="vf-dot" style="background:var(--pk);">8</div><div class="vf-line"></div></div><div class="vf-content"><div class="vf-title" style="color:var(--pk);">결제정보 입력 (분리)</div></div></div>
+        <div class="vf-row"><div class="vf-step-col"><div class="vf-dot" style="background:var(--pk);">9-13</div><div class="vf-line"></div></div><div class="vf-content"><div class="vf-title" style="color:var(--pk);">최종확인 ×5회 반복</div><div class="vf-desc">이탈 위험 최고 구간</div></div></div>
+        <div class="vf-row"><div class="vf-step-col"><div class="vf-dot">✓</div></div><div class="vf-content"><div class="vf-title">완료</div></div></div>
+      </div>
+    </div>
+    <div class="cbox">
+      <div class="cbox-title"><span class="dot-g"></span>개선 가입 플로우 — 7단계</div>
+      <div class="vflow">
+        <div class="vf-row"><div class="vf-step-col"><div class="vf-dot grn">1</div><div class="vf-line"></div></div><div class="vf-content"><div class="vf-title">요금제 확인</div><div class="vf-tags"><span class="vf-tag vt-grn">유지</span></div></div></div>
+        <div class="vf-row"><div class="vf-step-col"><div class="vf-dot grn">2</div><div class="vf-line"></div></div><div class="vf-content"><div class="vf-title">본인인증</div><div class="vf-tags"><span class="vf-tag vt-grn">유지</span></div></div></div>
+        <div class="vf-row"><div class="vf-step-col"><div class="vf-dot grn">3</div><div class="vf-line"></div></div><div class="vf-content"><div class="vf-title">유심 + 번호 통합</div><div class="vf-tags"><span class="vf-tag vt-blu">2단계 병합</span></div></div></div>
+        <div class="vf-row"><div class="vf-step-col"><div class="vf-dot grn">4</div><div class="vf-line"></div></div><div class="vf-content"><div class="vf-title">배송 + 부가서비스 통합</div><div class="vf-tags"><span class="vf-tag vt-blu">2단계 병합</span></div></div></div>
+        <div class="vf-row"><div class="vf-step-col"><div class="vf-dot grn">5</div><div class="vf-line"></div></div><div class="vf-content"><div class="vf-title">약관 + 결제 통합</div><div class="vf-tags"><span class="vf-tag vt-blu">2단계 병합</span></div></div></div>
+        <div class="vf-row"><div class="vf-step-col"><div class="vf-dot grn">6</div><div class="vf-line"></div></div><div class="vf-content"><div class="vf-title">최종 요약 확인 (1회)</div><div class="vf-tags"><span class="vf-tag vt-pk">5→1 통합</span></div></div></div>
+        <div class="vf-row"><div class="vf-step-col"><div class="vf-dot grn">✓</div></div><div class="vf-content"><div class="vf-title">완료 + 케어 온보딩 연결</div><div class="vf-tags"><span class="vf-tag vt-grn">신규</span></div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. 유심구매 -->
+  <div class="flow-subtitle">3. 유심 구매 플로우</div>
+  <div class="flow-wrap">
+    <div class="flow-title">유심 구매 방식 선택 플로우 <span class="flow-tag ft-ux">UX Flow</span></div>
+    <div class="hflow">
+      <div class="hf-step"><div class="hf-box start"><div class="hf-t">유심구매 탭 진입</div><div class="hf-s">하단탭 3번째</div></div></div>
+      <div class="hf-arr">›</div>
+      <div class="hf-step"><div class="hf-box decision"><div class="hf-t">구매 방식 선택</div></div></div>
+      <div class="hf-arr">›</div>
+      <div class="hf-step">
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div class="hf-box action"><div class="hf-t">지금 배송</div><div class="hf-s">1~2일 택배</div></div>
+          <div class="hf-box action"><div class="hf-t">편의점</div><div class="hf-s">즉시 수령</div></div>
+          <div class="hf-box action"><div class="hf-t">원칩</div><div class="hf-s">패키지</div></div>
+          <div class="hf-box improved"><div class="hf-t">eSIM</div><div class="hf-s">즉시 개통 · NEW</div></div>
+        </div>
+      </div>
+      <div class="hf-arr">›</div>
+      <div class="hf-step"><div class="hf-box action"><div class="hf-t">요금제 선택</div><div class="hf-s">가입 플로우 연결</div></div></div>
+      <div class="hf-arr">›</div>
+      <div class="hf-step"><div class="hf-box end"><div class="hf-t">개통 완료</div></div></div>
+    </div>
+  </div>
+
+  <!-- 4. 마이/케어 -->
+  <div class="flow-subtitle">4. 마이 · 알닷케어 통합 플로우</div>
+  <div class="flow-wrap">
+    <div class="flow-title">마이 탭 (알닷케어 통합) 플로우 <span class="flow-tag ft-wf">Workflow</span></div>
+    <div class="hflow">
+      <div class="hf-step"><div class="hf-box start"><div class="hf-t">마이 탭 진입</div><div class="hf-s">로그인 상태</div></div></div>
+      <div class="hf-arr">›</div>
+      <div class="hf-step"><div class="hf-box improved"><div class="hf-t">알닷케어 영역</div><div class="hf-s">사용량 바 노출</div></div></div>
+      <div class="hf-arr">›</div>
+      <div class="hf-step"><div class="hf-box decision"><div class="hf-t">기능 선택</div></div></div>
+      <div class="hf-arr">›</div>
+      <div class="hf-step">
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div class="hf-box action"><div class="hf-t">가입정보</div></div>
+          <div class="hf-box action"><div class="hf-t">유심변경</div></div>
+          <div class="hf-box action"><div class="hf-t">납부관리</div></div>
+          <div class="hf-box action"><div class="hf-t">번호변경</div></div>
+        </div>
+      </div>
+      <div class="hf-arr">›</div>
+      <div class="hf-step"><div class="hf-box end"><div class="hf-t">처리 완료</div><div class="hf-s">마이 복귀</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ 핵심 기능 플로우 ════ -->
+<div id="wf-key" class="sec">
+  <div class="sec-title">핵심 기능 워크플로우</div>
+  <div class="sec-sub">주요 사용자 목적별 상세 플로우</div>
+
+  <!-- 내게맞는 요금제 추천 -->
+  <div class="flow-subtitle">핵심 1. 내게맞는 요금제 찾기 (추천 플로우)</div>
+  <div class="flow-wrap">
+    <div class="flow-title">요금제 추천 9단계 플로우 <span class="flow-tag ft-ux">UX Flow</span> <span class="flow-tag ft-sys">위치 이동: /mypage → /plan</span></div>
+    <div class="hflow">
+      <div class="hf-step"><div class="hf-box start"><div class="hf-t">추천 진입</div><div class="hf-s">홈 카드 or 요금제 배너</div></div></div>
+      <div class="hf-arr">›</div>
+      <div class="hf-step"><div class="hf-box action"><div class="hf-t">Q1. 데이터 사용량</div><div class="hf-s">적음·보통·많음</div></div></div>
+      <div class="hf-arr">›</div>
+      <div class="hf-step"><div class="hf-box action"><div class="hf-t">Q2. 통화 패턴</div><div class="hf-s">적음·보통·많음</div></div></div>
+      <div class="hf-arr">›</div>
+      <div class="hf-step"><div class="hf-box action"><div class="hf-t">Q3. 5G 필요 여부</div></div></div>
+      <div class="hf-arr">›</div>
+      <div class="hf-step"><div class="hf-box action"><div class="hf-t">Q4. 통신사 선호</div></div></div>
+      <div class="hf-arr">›</div>
+      <div class="hf-step"><div class="hf-box action"><div class="hf-t">Q5. 예산</div></div></div>
+      <div class="hf-arr">›</div>
+      <div class="hf-step"><div class="hf-box action"><div class="hf-t">Q6. 부가기능</div></div></div>
+      <div class="hf-arr">›</div>
+      <div class="hf-step"><div class="hf-box system"><div class="hf-t">결과 도출</div><div class="hf-s">AI 매칭</div></div></div>
+      <div class="hf-arr">›</div>
+      <div class="hf-step"><div class="hf-box improved"><div class="hf-t">추천 요금제</div><div class="hf-s">상세 직접 연결</div></div></div>
+      <div class="hf-arr">›</div>
+      <div class="hf-step"><div class="hf-box end"><div class="hf-t">가입 시작</div></div></div>
+    </div>
+  </div>
+
+  <!-- 로그인/인증 -->
+  <div class="flow-subtitle">핵심 2. 로그인 · 본인인증</div>
+  <div class="flow-wrap">
+    <div class="flow-title">인증 플로우 <span class="flow-tag ft-sys">System Flow</span></div>
+    <div class="hflow">
+      <div class="hf-step"><div class="hf-box start"><div class="hf-t">로그인 필요</div><div class="hf-s">가입/마이 진입 시</div></div></div>
+      <div class="hf-arr">›</div>
+      <div class="hf-step"><div class="hf-box decision"><div class="hf-t">로그인 상태</div></div></div>
+      <div class="hf-arr">›</div>
+      <div class="hf-step">
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div class="hf-box system"><div class="hf-t">로그인됨</div><div class="hf-s">목적 화면 이동</div></div>
+          <div class="hf-box action"><div class="hf-t">미로그인</div><div class="hf-s">로그인 화면</div></div>
+        </div>
+      </div>
+      <div class="hf-arr">›</div>
+      <div class="hf-step"><div class="hf-box decision"><div class="hf-t">인증 방식</div></div></div>
+      <div class="hf-arr">›</div>
+      <div class="hf-step">
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div class="hf-box action"><div class="hf-t">휴대폰 SMS</div></div>
+          <div class="hf-box action"><div class="hf-t">PASS 인증</div></div>
+        </div>
+      </div>
+      <div class="hf-arr">›</div>
+      <div class="hf-step"><div class="hf-box system"><div class="hf-t">인증 처리</div></div></div>
+      <div class="hf-arr">›</div>
+      <div class="hf-step"><div class="hf-box decision"><div class="hf-t">성공?</div></div></div>
+      <div class="hf-arr">›</div>
+      <div class="hf-step">
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div class="hf-box end"><div class="hf-t">성공 → 진행</div></div>
+          <div class="hf-box issue"><div class="hf-t">실패 → 재시도</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 납부/유심 변경 -->
+  <div class="flow-subtitle">핵심 3. 납부 관리 플로우</div>
+  <div class="flow-wrap">
+    <div class="flow-title">납부 확인 · 즉시수납 플로우 <span class="flow-tag ft-wf">Workflow</span></div>
+    <div class="hflow">
+      <div class="hf-step"><div class="hf-box start"><div class="hf-t">마이 탭 진입</div></div></div>
+      <div class="hf-arr">›</div>
+      <div class="hf-step"><div class="hf-box improved"><div class="hf-t">알닷케어 영역</div><div class="hf-s">납부관리 쇼트컷</div></div></div>
+      <div class="hf-arr">›</div>
+      <div class="hf-step"><div class="hf-box action"><div class="hf-t">납부 목록 확인</div><div class="hf-s">월별 납부 내역</div></div></div>
+      <div class="hf-arr">›</div>
+      <div class="hf-step"><div class="hf-box decision"><div class="hf-t">즉시수납 필요?</div></div></div>
+      <div class="hf-arr">›</div>
+      <div class="hf-step">
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div class="hf-box action"><div class="hf-t">즉시수납 요청</div></div>
+          <div class="hf-box system"><div class="hf-t">납부 완료 확인</div></div>
+        </div>
+      </div>
+      <div class="hf-arr">›</div>
+      <div class="hf-step"><div class="hf-box system"><div class="hf-t">결제 처리</div></div></div>
+      <div class="hf-arr">›</div>
+      <div class="hf-step"><div class="hf-box end"><div class="hf-t">완료</div></div></div>
+    </div>
+  </div>
+
+  <!-- 고객지원 -->
+  <div class="flow-subtitle">핵심 4. 고객지원 진입 플로우</div>
+  <div class="flow-wrap">
+    <div class="flow-title">고객지원 접근 플로우 <span class="flow-tag ft-ux">UX Flow</span> <span class="flow-tag ft-sys">햄버거 → 마이 통합</span></div>
+    <div class="hflow">
+      <div class="hf-step"><div class="hf-box start"><div class="hf-t">문의 필요</div></div></div>
+      <div class="hf-arr">›</div>
+      <div class="hf-step"><div class="hf-box improved"><div class="hf-t">마이 탭</div><div class="hf-s">하단 메뉴 노출</div></div></div>
+      <div class="hf-arr">›</div>
+      <div class="hf-step"><div class="hf-box decision"><div class="hf-t">문의 유형</div></div></div>
+      <div class="hf-arr">›</div>
+      <div class="hf-step">
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div class="hf-box action"><div class="hf-t">FAQ 검색</div></div>
+          <div class="hf-box action"><div class="hf-t">1:1 문의</div></div>
+          <div class="hf-box action"><div class="hf-t">전화 상담</div></div>
+        </div>
+      </div>
+      <div class="hf-arr">›</div>
+      <div class="hf-step"><div class="hf-box end"><div class="hf-t">문의 처리</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ 스크린 가이드 ════ -->
+<div id="sg" class="sec">
+  <div class="sec-title">스크린 가이드</div>
+  <div class="sec-sub">개편안 기준 화면별 구성 요소 및 개선 포인트 정의</div>
+
+  <div class="sg-grid">
+
+    <!-- 홈 -->
+    <div class="sg-card">
+      <div class="sg-card-head">
+        <div class="sg-card-id">SCR-001</div>
+        <div class="sg-card-title">홈</div>
+        <div class="sg-card-path">/home</div>
+      </div>
+      <div class="sg-card-body">
+        <div class="sg-section">
+          <div class="sg-sec-title">화면 구성 요소</div>
+          <div class="sg-item">상단 헤더 (로고 · 쿠폰함 · 검색 · 햄버거)</div>
+          <div class="sg-item">메인 배너 1개 (알닷ONLY 혜택 중심)</div>
+          <div class="sg-item">퀵메뉴 쇼트컷 4종 (요금제찾기·유심구매·사용량·혜택)</div>
+          <div class="sg-item">알닷ONLY플러스 배너</div>
+          <div class="sg-item">내게맞는 요금제 진입 카드</div>
+          <div class="sg-item">인기 요금제 카드 2~3종</div>
+          <div class="sg-item">하단 탭바 (홈 활성)</div>
+        </div>
+        <div class="sg-section">
+          <div class="sg-sec-title">개선 포인트</div>
+          <div class="sg-item">배너 다중→1개 집중 노출</div>
+          <div class="sg-item">퀵메뉴 쇼트컷 신규 추가 (현행 없음)</div>
+          <div class="sg-item">내게맞는 요금제 카드 추가 (/mypage 이동)</div>
+        </div>
+        <div class="sg-tags">
+          <span class="sg-tag sg-t-new">퀵메뉴 신규</span>
+          <span class="sg-tag sg-t-fix">배너 축소</span>
+          <span class="sg-tag sg-t-mv">추천 카드 이동</span>
+        </div>
+      </div>
+      <div class="sg-card-foot">
+        <span class="sg-comp">배너 컴포넌트</span>
+        <span class="sg-comp">퀵메뉴 그리드</span>
+        <span class="sg-comp">요금제 카드</span>
+        <span class="sg-comp">하단탭바</span>
+      </div>
+    </div>
+
+    <!-- 요금제 목록 -->
+    <div class="sg-card">
+      <div class="sg-card-head">
+        <div class="sg-card-id">SCR-002</div>
+        <div class="sg-card-title">요금제 목록</div>
+        <div class="sg-card-path">/plan/plan-list</div>
+      </div>
+      <div class="sg-card-body">
+        <div class="sg-section">
+          <div class="sg-sec-title">화면 구성 요소</div>
+          <div class="sg-item">내게맞는 요금제 찾기 배너 (최상단)</div>
+          <div class="sg-item">후불/신불 탭 스위처</div>
+          <div class="sg-item">칩 필터 (전체·알닷ONLY·5G·대용량·저가형·무제한)</div>
+          <div class="sg-item">정렬 기준 (추천순·낮은가격·높은데이터)</div>
+          <div class="sg-item">요금제 카드 리스트 (무한 스크롤)</div>
+          <div class="sg-item">나에게 꼭 맞는 요금제 CTA 배너 (하단)</div>
+        </div>
+        <div class="sg-section">
+          <div class="sg-sec-title">개선 포인트</div>
+          <div class="sg-item">통신사 다중 체크박스 → 칩 필터로 단순화</div>
+          <div class="sg-item">추천 배너 최상단 이동 (/mypage → /plan)</div>
+          <div class="sg-item">비교하기 카드 내 인라인 노출</div>
+        </div>
+        <div class="sg-tags">
+          <span class="sg-tag sg-t-fix">필터 개선</span>
+          <span class="sg-tag sg-t-mv">추천 배너 이동</span>
+        </div>
+      </div>
+      <div class="sg-card-foot">
+        <span class="sg-comp">탭 스위처</span>
+        <span class="sg-comp">칩 필터</span>
+        <span class="sg-comp">요금제 카드</span>
+        <span class="sg-comp">무한스크롤</span>
+      </div>
+    </div>
+
+    <!-- 요금제 상세 -->
+    <div class="sg-card">
+      <div class="sg-card-head">
+        <div class="sg-card-id">SCR-003</div>
+        <div class="sg-card-title">요금제 상세</div>
+        <div class="sg-card-path">/plan/plan-list-detail</div>
+      </div>
+      <div class="sg-card-body">
+        <div class="sg-section">
+          <div class="sg-sec-title">화면 구성 요소</div>
+          <div class="sg-item">배지 (알닷ONLY·인기 등) + 요금제명</div>
+          <div class="sg-item">통신사·별점·데이터·가격 정보 블록</div>
+          <div class="sg-item">가입하기 + 비교하기 버튼 (상단 스티키)</div>
+          <div class="sg-item">탭 (제공혜택·부가서비스·사용자리뷰·유사요금제)</div>
+          <div class="sg-item">기본 정보 테이블 (데이터·통화·문자·망)</div>
+          <div class="sg-item">알닷 혜택 리스트</div>
+          <div class="sg-item">유사 요금제 카드 (가로 스크롤)</div>
+        </div>
+        <div class="sg-section">
+          <div class="sg-sec-title">개선 포인트</div>
+          <div class="sg-item">가입하기 CTA 상단 스티키 고정 (현행: 하단)</div>
+          <div class="sg-item">정보 탭 구조 신규 도입 (현행: 단일 스크롤)</div>
+          <div class="sg-item">비교하기 인라인 병기</div>
+        </div>
+        <div class="sg-tags">
+          <span class="sg-tag sg-t-fix">CTA 상단 고정</span>
+          <span class="sg-tag sg-t-new">탭 구조 신규</span>
+        </div>
+      </div>
+      <div class="sg-card-foot">
+        <span class="sg-comp">스티키 CTA</span>
+        <span class="sg-comp">탭 컴포넌트</span>
+        <span class="sg-comp">정보 테이블</span>
+        <span class="sg-comp">혜택 리스트</span>
+      </div>
+    </div>
+
+    <!-- 가입 플로우 -->
+    <div class="sg-card">
+      <div class="sg-card-head">
+        <div class="sg-card-id">SCR-004</div>
+        <div class="sg-card-title">가입 플로우 (7단계)</div>
+        <div class="sg-card-path">/plan/plan-list-subscription</div>
+      </div>
+      <div class="sg-card-body">
+        <div class="sg-section">
+          <div class="sg-sec-title">단계별 화면</div>
+          <div class="sg-item">단계 1 — 요금제 최종 확인 카드</div>
+          <div class="sg-item">단계 2 — 본인인증 (휴대폰/PASS)</div>
+          <div class="sg-item">단계 3 — 유심방식 + 번호 선택 통합</div>
+          <div class="sg-item">단계 4 — 배송지 + 부가서비스 통합</div>
+          <div class="sg-item">단계 5 — 약관동의 + 결제정보 통합</div>
+          <div class="sg-item">단계 6 — 최종 요약 확인 (1개)</div>
+          <div class="sg-item">단계 7 — 완료 + 케어 온보딩 CTA</div>
+        </div>
+        <div class="sg-section">
+          <div class="sg-sec-title">공통 UI 요소</div>
+          <div class="sg-item">상단 진행 바 (7개 도트)</div>
+          <div class="sg-item">이전/다음 하단 고정 버튼</div>
+        </div>
+        <div class="sg-tags">
+          <span class="sg-tag sg-t-fix">13→7단계</span>
+          <span class="sg-tag sg-t-new">진행바 신규</span>
+          <span class="sg-tag sg-t-new">온보딩 연결</span>
+        </div>
+      </div>
+      <div class="sg-card-foot">
+        <span class="sg-comp">진행 바</span>
+        <span class="sg-comp">라디오 그룹</span>
+        <span class="sg-comp">요약 카드</span>
+        <span class="sg-comp">스티키 버튼</span>
+      </div>
+    </div>
+
+    <!-- 유심구매 -->
+    <div class="sg-card">
+      <div class="sg-card-head">
+        <div class="sg-card-id">SCR-005</div>
+        <div class="sg-card-title">유심구매</div>
+        <div class="sg-card-path">/usim</div>
+      </div>
+      <div class="sg-card-body">
+        <div class="sg-section">
+          <div class="sg-sec-title">화면 구성 요소</div>
+          <div class="sg-item">구매 방식 선택 헤드카피 + 서브카피</div>
+          <div class="sg-item">지금배송 카드 (인기 배지)</div>
+          <div class="sg-item">편의점 구매 카드</div>
+          <div class="sg-item">유심원칩 구매 카드</div>
+          <div class="sg-item">eSIM 개통 카드 (NEW · N페이 혜택 배지)</div>
+          <div class="sg-item">구매 전 확인사항 안내 (접기/펼치기)</div>
+        </div>
+        <div class="sg-section">
+          <div class="sg-sec-title">개선 포인트</div>
+          <div class="sg-item">하단탭 격상 (현행: 햄버거 전용)</div>
+          <div class="sg-item">eSIM 옵션 신규 카드 추가</div>
+          <div class="sg-item">4종 방식 카드형 명확 구분</div>
+        </div>
+        <div class="sg-tags">
+          <span class="sg-tag sg-t-new">탭 격상</span>
+          <span class="sg-tag sg-t-new">eSIM 신규</span>
+          <span class="sg-tag sg-t-fix">방식 카드화</span>
+        </div>
+      </div>
+      <div class="sg-card-foot">
+        <span class="sg-comp">방식 선택 카드</span>
+        <span class="sg-comp">배지 컴포넌트</span>
+        <span class="sg-comp">아코디언 안내</span>
+      </div>
+    </div>
+
+    <!-- 혜택 -->
+    <div class="sg-card">
+      <div class="sg-card-head">
+        <div class="sg-card-id">SCR-006</div>
+        <div class="sg-card-title">혜택 (이벤트 통합)</div>
+        <div class="sg-card-path">/benefit</div>
+      </div>
+      <div class="sg-card-body">
+        <div class="sg-section">
+          <div class="sg-sec-title">화면 구성 요소</div>
+          <div class="sg-item">이벤트 탭 (통신사 전체·알닷ONLY)</div>
+          <div class="sg-item">이벤트 카드 리스트 (썸네일·기간·배지)</div>
+          <div class="sg-item">알닷ONLY플러스 혜택 섹션</div>
+          <div class="sg-item">제휴카드 혜택 섹션</div>
+          <div class="sg-item">파트너스 섹션</div>
+          <div class="sg-item">당첨자 발표 탭</div>
+        </div>
+        <div class="sg-section">
+          <div class="sg-sec-title">개선 포인트</div>
+          <div class="sg-item">이벤트 탭 + 혜택 탭 단일 통합 (현행: 분리)</div>
+          <div class="sg-item">알닷ONLY 혜택 상단 노출 강화</div>
+        </div>
+        <div class="sg-tags">
+          <span class="sg-tag sg-t-mg">이벤트+혜택 통합</span>
+        </div>
+      </div>
+      <div class="sg-card-foot">
+        <span class="sg-comp">탭 스위처</span>
+        <span class="sg-comp">이벤트 카드</span>
+        <span class="sg-comp">혜택 섹션</span>
+      </div>
+    </div>
+
+    <!-- 마이 -->
+    <div class="sg-card">
+      <div class="sg-card-head">
+        <div class="sg-card-id">SCR-007</div>
+        <div class="sg-card-title">마이 (알닷케어 통합)</div>
+        <div class="sg-card-path">/mypage</div>
+      </div>
+      <div class="sg-card-body">
+        <div class="sg-section">
+          <div class="sg-sec-title">화면 구성 요소</div>
+          <div class="sg-item">프로필 카드 (이름·U+알뜰폰 배지)</div>
+          <div class="sg-item">알닷케어 영역 (사용량 바 + 기본정보)</div>
+          <div class="sg-item">빠른 기능 쇼트컷 4개 (가입정보·유심·납부·번호)</div>
+          <div class="sg-item">신청현황 그리드 (모바일·인터넷·쿠폰·USIM)</div>
+          <div class="sg-item">관심·이력 메뉴 (찜·최근본·문의·고객센터)</div>
+        </div>
+        <div class="sg-section">
+          <div class="sg-sec-title">개선 포인트</div>
+          <div class="sg-item">알닷케어 탭 → 마이 내 서브 영역 통합</div>
+          <div class="sg-item">사용량 바 마이 상단 즉시 노출</div>
+          <div class="sg-item">고객센터 마이 하단 통합 (현행: 햄버거)</div>
+        </div>
+        <div class="sg-tags">
+          <span class="sg-tag sg-t-mg">케어 통합</span>
+          <span class="sg-tag sg-t-new">사용량 바 노출</span>
+          <span class="sg-tag sg-t-mv">고객센터 이동</span>
+        </div>
+      </div>
+      <div class="sg-card-foot">
+        <span class="sg-comp">프로필 카드</span>
+        <span class="sg-comp">사용량 바</span>
+        <span class="sg-comp">쇼트컷 그리드</span>
+        <span class="sg-comp">메뉴 리스트</span>
+      </div>
+    </div>
+
+    <!-- 내게맞는 요금제 -->
+    <div class="sg-card">
+      <div class="sg-card-head">
+        <div class="sg-card-id">SCR-008</div>
+        <div class="sg-card-title">내게맞는 요금제 찾기</div>
+        <div class="sg-card-path">/plan/recommand (이동)</div>
+      </div>
+      <div class="sg-card-body">
+        <div class="sg-section">
+          <div class="sg-sec-title">화면 구성 요소</div>
+          <div class="sg-item">진행 바 (9단계)</div>
+          <div class="sg-item">Q1 데이터 사용량 선택</div>
+          <div class="sg-item">Q2 통화 패턴 선택</div>
+          <div class="sg-item">Q3 5G 필요 여부</div>
+          <div class="sg-item">Q4 통신사 선호도</div>
+          <div class="sg-item">Q5 월 예산</div>
+          <div class="sg-item">Q6 부가기능 필요 여부</div>
+          <div class="sg-item">결과 화면 (추천 요금제 → 상세 연결)</div>
+        </div>
+        <div class="sg-section">
+          <div class="sg-sec-title">개선 포인트</div>
+          <div class="sg-item">경로: /mypage/recommand → /plan/recommand</div>
+          <div class="sg-item">홈·요금제 탭 양쪽에서 진입 가능</div>
+          <div class="sg-item">결과 → 요금제 상세 직접 연결</div>
+        </div>
+        <div class="sg-tags">
+          <span class="sg-tag sg-t-mv">경로 이동</span>
+          <span class="sg-tag sg-t-new">홈 진입 추가</span>
+        </div>
+      </div>
+      <div class="sg-card-foot">
+        <span class="sg-comp">단계 진행 바</span>
+        <span class="sg-comp">선택 카드</span>
+        <span class="sg-comp">결과 카드</span>
+      </div>
+    </div>
+
+    <!-- 공통 컴포넌트 -->
+    <div class="sg-card">
+      <div class="sg-card-head">
+        <div class="sg-card-id">SCR-COM</div>
+        <div class="sg-card-title">공통 컴포넌트 가이드</div>
+        <div class="sg-card-path">전체 화면 공통</div>
+      </div>
+      <div class="sg-card-body">
+        <div class="sg-section">
+          <div class="sg-sec-title">네비게이션</div>
+          <div class="sg-item">상단 헤더: 로고 + 쿠폰함 + 검색 + 햄버거</div>
+          <div class="sg-item">하단 탭바: 홈·요금제·유심구매·혜택·마이 (5종)</div>
+          <div class="sg-item">뒤로가기: 서브 페이지 좌상단</div>
+        </div>
+        <div class="sg-section">
+          <div class="sg-sec-title">공통 UI 컴포넌트</div>
+          <div class="sg-item">배지: 알닷ONLY(그린)·인기(앰버)·NEW(핑크)·eSIM(블루)</div>
+          <div class="sg-item">CTA 버튼: Primary(블랙)·Secondary(아웃라인)·Danger(핑크레드)</div>
+          <div class="sg-item">카드: 요금제·이벤트·유심구매 방식</div>
+          <div class="sg-item">칩 필터: 단일 선택형 수평 스크롤</div>
+          <div class="sg-item">진행 바: 도트형 (가입/추천 플로우)</div>
+          <div class="sg-item">사용량 바: 프로그레스 바 + 수치 레이블</div>
+        </div>
+        <div class="sg-section">
+          <div class="sg-sec-title">컬러 시스템</div>
+          <div class="sg-item">Primary: #E8003D (핑크레드)</div>
+          <div class="sg-item">Secondary: #7B5CF0 (퍼플)</div>
+          <div class="sg-item">Success: #2DBF7A (그린)</div>
+          <div class="sg-item">Neutral BG: #F0EEE8 (웜그레이)</div>
+        </div>
+        <div class="sg-tags">
+          <span class="sg-tag sg-t-fix">WCAG 2.1 AA 준수</span>
+        </div>
+      </div>
+      <div class="sg-card-foot">
+        <span class="sg-comp">헤더</span>
+        <span class="sg-comp">탭바</span>
+        <span class="sg-comp">배지</span>
+        <span class="sg-comp">버튼</span>
+        <span class="sg-comp">카드</span>
+        <span class="sg-comp">칩필터</span>
+        <span class="sg-comp">진행바</span>
+      </div>
+    </div>
+
+  </div><!-- sg-grid -->
+</div>
+
+</div><!-- body -->
+
+<script>
+function show(id, el) {
+  document.querySelectorAll('.sec').forEach(s => s.classList.remove('on'));
+  document.querySelectorAll('.hn').forEach(b => b.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  if (el) el.classList.add('on');
+}
+</script>
+</body>
+</html>

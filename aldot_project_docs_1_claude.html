@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>알닷 개편 프로젝트 산출물 — PRD · IA · 워크플로우 · 스크린가이드</title>
+<link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F4F2EC; --surface: #FDFCF8; --surface2: #EEECEA; --surface3: #E4E2DC;
+  --border: rgba(0,0,0,0.08); --border2: rgba(0,0,0,0.14);
+  --text: #1A1A1A; --text2: #6A6860; --text3: #A8A49E;
+  --accent: #1A1A1A; --pink: #E8003D; --green: #2DBF7A;
+  --amber: #F5A623; --blue: #3B82F6; --purple: #7C3AED;
+  --r: 10px; --r-sm: 6px; --r-lg: 14px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Pretendard', -apple-system, sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.6; }
+
+/* ── 글로벌 헤더 ── */
+.ghead {
+  background: #1A1A1A; height: 52px; padding: 0 32px;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 200;
+}
+.ghead-logo { font-size: 14px; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px; }
+.ghead-logo em { background: #C8F135; color: #1A1A1A; font-style: normal; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 3px; }
+.ghead-meta { font-size: 11px; color: rgba(255,255,255,0.35); }
+
+/* ── 탭 네비 ── */
+.tab-nav {
+  background: var(--surface); border-bottom: 1px solid var(--border);
+  padding: 0 32px; display: flex; gap: 0;
+  position: sticky; top: 52px; z-index: 150;
+  overflow-x: auto; scrollbar-width: none;
+}
+.tab-nav::-webkit-scrollbar { display: none; }
+.tnav {
+  font-size: 13px; font-weight: 600; padding: 14px 18px;
+  color: var(--text3); cursor: pointer; white-space: nowrap;
+  border-bottom: 2.5px solid transparent; transition: all .15s;
+  display: flex; align-items: center; gap: 6px;
+}
+.tnav:hover { color: var(--text); }
+.tnav.on { color: var(--text); border-bottom-color: var(--text); }
+.tnav-num {
+  font-size: 10px; font-weight: 700; padding: 1px 6px;
+  border-radius: 20px; background: var(--surface2); color: var(--text3);
+}
+.tnav.on .tnav-num { background: var(--text); color: #fff; }
+
+/* ── 탭 콘텐츠 ── */
+.tab-pane { display: none; }
+.tab-pane.on { display: block; }
+
+/* ── 페이지 레이아웃 ── */
+.page-wrap { max-width: 1200px; margin: 0 auto; padding: 36px 32px 80px; }
+
+/* ── 섹션 헤더 ── */
+.sec-header { margin-bottom: 28px; padding-bottom: 18px; border-bottom: 1px solid var(--border); }
+.sec-eyebrow { font-size: 11px; font-weight: 700; color: var(--text3); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 6px; }
+.sec-title { font-size: 24px; font-weight: 800; letter-spacing: -.03em; margin-bottom: 8px; }
+.sec-desc { font-size: 13px; color: var(--text2); max-width: 600px; line-height: 1.7; }
+
+/* ── 카드 ── */
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 22px 24px; margin-bottom: 16px; }
+.card-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+.card-title-bar { width: 3px; height: 14px; border-radius: 2px; background: var(--text); flex-shrink: 0; }
+
+/* ── PRD 섹션 ── */
+.prd-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+.prd-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 16px 18px; }
+.prd-label { font-size: 11px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px; }
+.prd-value { font-size: 13px; color: var(--text); line-height: 1.7; }
+.prd-value ul { padding-left: 0; list-style: none; display: flex; flex-direction: column; gap: 4px; }
+.prd-value li { padding-left: 12px; position: relative; }
+.prd-value li::before { content: '·'; position: absolute; left: 0; color: var(--text3); }
+
+.milestone-list { display: flex; flex-direction: column; gap: 0; }
+.ms-item { display: flex; gap: 16px; align-items: flex-start; padding: 12px 0; border-bottom: 1px solid var(--border); }
+.ms-item:last-child { border: none; }
+.ms-phase { font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; }
+.ms-phase.ph1 { background: rgba(59,130,246,0.1); color: #1456A0; }
+.ms-phase.ph2 { background: rgba(124,58,237,0.1); color: #5B21B6; }
+.ms-phase.ph3 { background: rgba(45,191,122,0.1); color: #1A6B3A; }
+.ms-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+.ms-tasks { font-size: 11px; color: var(--text2); }
+.ms-hour { font-size: 11px; font-weight: 700; color: var(--text3); margin-left: auto; white-space: nowrap; }
+
+/* ── 요구사항 테이블 ── */
+.req-filter-bar { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+.rfbtn { font-size: 11px; font-weight: 600; padding: 5px 12px; border-radius: 20px; border: 1px solid var(--border2); background: var(--surface2); color: var(--text2); cursor: pointer; transition: all .15s; }
+.rfbtn:hover { background: var(--surface3); }
+.rfbtn.on { background: var(--text); color: #fff; border-color: var(--text); }
+
+.req-table-wrap { overflow-x: auto; border-radius: var(--r); border: 1px solid var(--border); }
+.req-table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 1000px; }
+.req-table th { background: var(--surface2); padding: 10px 12px; text-align: left; font-size: 11px; font-weight: 700; color: var(--text2); border-bottom: 1px solid var(--border2); white-space: nowrap; }
+.req-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.5; }
+.req-table tr:last-child td { border: none; }
+.req-table tr:hover td { background: rgba(0,0,0,0.015); }
+.req-id { font-size: 10px; font-weight: 700; color: var(--text3); white-space: nowrap; }
+.req-pri { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 20px; white-space: nowrap; }
+.pri-high { background: rgba(232,0,61,0.1); color: var(--pink); }
+.pri-mid  { background: rgba(245,166,35,0.1); color: #8A5200; }
+.pri-low  { background: rgba(45,191,122,0.1); color: #1A6B3A; }
+.req-page { font-size: 10px; background: var(--surface2); border-radius: 3px; padding: 1px 6px; color: var(--text2); white-space: nowrap; }
+
+/* ── IA 테이블 ── */
+.ia-table-wrap { overflow-x: auto; border-radius: var(--r); border: 1px solid var(--border); }
+.ia-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.ia-table th { background: var(--surface2); padding: 10px 14px; text-align: left; font-size: 11px; font-weight: 700; color: var(--text2); border-bottom: 1px solid var(--border2); white-space: nowrap; }
+.ia-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.5; }
+.ia-table tr:last-child td { border: none; }
+.ia-table tr:hover td { background: rgba(0,0,0,0.015); }
+.ia-d1 { font-size: 13px; font-weight: 700; color: var(--text); }
+.ia-d2 { font-size: 12px; font-weight: 600; color: var(--text); padding-left: 10px; }
+.ia-d3 { font-size: 12px; color: var(--text2); padding-left: 20px; }
+.ia-id { font-size: 10px; font-weight: 700; color: var(--text3); white-space: nowrap; }
+.ia-badge { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 3px; white-space: nowrap; }
+.ia-new    { background: rgba(45,191,122,0.1); color: #1A6B3A; }
+.ia-merge  { background: rgba(59,130,246,0.1); color: #1456A0; }
+.ia-move   { background: rgba(245,166,35,0.1); color: #8A5200; }
+.ia-exist  { background: var(--surface2); color: var(--text3); }
+.ia-row-d1 td { background: rgba(0,0,0,0.025); }
+.ia-row-d2 td { background: rgba(0,0,0,0.01); }
+
+/* ── 워크플로우 ── */
+.wf-section { margin-bottom: 32px; }
+.wf-sec-title { font-size: 16px; font-weight: 700; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+.wf-sec-badge { font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 20px; }
+.wf-overall { display: flex; flex-direction: column; gap: 10px; }
+.wf-phase { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; }
+.wf-phase-head { display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: var(--surface2); border-bottom: 1px solid var(--border); cursor: pointer; }
+.wf-phase-name { font-size: 13px; font-weight: 700; }
+.wf-phase-desc { font-size: 12px; color: var(--text2); }
+.wf-phase-arrow { margin-left: auto; font-size: 12px; color: var(--text3); transition: transform .2s; }
+.wf-phase.open .wf-phase-arrow { transform: rotate(180deg); }
+.wf-phase-body { display: none; padding: 16px; }
+.wf-phase.open .wf-phase-body { display: block; }
+.wf-steps { display: flex; align-items: center; gap: 0; flex-wrap: wrap; }
+.wf-step { background: var(--surface2); border: 1px solid var(--border2); border-radius: 8px; padding: 10px 13px; min-width: 110px; text-align: center; }
+.wf-step-num { font-size: 10px; color: var(--text3); font-weight: 700; margin-bottom: 3px; }
+.wf-step-name { font-size: 12px; font-weight: 600; color: var(--text); line-height: 1.4; }
+.wf-step-sub { font-size: 10px; color: var(--text2); margin-top: 3px; line-height: 1.4; }
+.wf-step.highlight { background: var(--text); border-color: var(--text); }
+.wf-step.highlight .wf-step-num,
+.wf-step.highlight .wf-step-name,
+.wf-step.highlight .wf-step-sub { color: #fff; }
+.wf-step.new-step { background: rgba(45,191,122,0.08); border-color: rgba(45,191,122,0.3); }
+.wf-step.issue { background: rgba(232,0,61,0.06); border-color: rgba(232,0,61,0.2); }
+.wf-arr { font-size: 14px; color: var(--text3); padding: 0 6px; flex-shrink: 0; }
+.wf-decision { background: rgba(245,166,35,0.08); border: 1px dashed rgba(245,166,35,0.4); border-radius: 8px; padding: 10px 13px; min-width: 110px; text-align: center; }
+.wf-decision-name { font-size: 12px; font-weight: 600; color: #8A5200; }
+.wf-note { font-size: 11px; color: var(--text2); background: var(--surface2); border-radius: 6px; padding: 8px 12px; margin-top: 12px; line-height: 1.6; }
+.wf-note b { color: var(--text); }
+
+/* ── 개선 포인트 범례 ── */
+.wf-legend { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+.wf-leg-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text2); }
+.wf-leg-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+
+/* ── 스크린 가이드 (iframe 방식) ── */
+.sg-layout { display: grid; grid-template-columns: 260px 1fr; gap: 24px; align-items: start; }
+.sg-sidebar { position: sticky; top: 110px; }
+.sg-nav-title { font-size: 10px; font-weight: 700; color: var(--text3); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 10px; }
+.sg-nav-list { display: flex; flex-direction: column; gap: 4px; }
+.sg-nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; border-radius: var(--r-sm);
+  border: 1px solid var(--border); background: var(--surface);
+  cursor: pointer; transition: all .15s;
+}
+.sg-nav-item:hover { border-color: var(--border2); background: var(--surface2); }
+.sg-nav-item.on { border-color: var(--text); background: var(--text); }
+.sg-nav-item.on .sg-nav-name,
+.sg-nav-item.on .sg-nav-sub { color: #fff; }
+.sg-nav-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.sg-nav-name { font-size: 12px; font-weight: 600; color: var(--text); }
+.sg-nav-sub  { font-size: 10px; color: var(--text3); margin-top: 1px; }
+
+.sg-main { display: flex; flex-direction: column; gap: 0; }
+.sg-screen-panel { display: none; }
+.sg-screen-panel.on { display: block; }
+
+/* 화면 뷰어 */
+.sg-viewer { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); overflow: hidden; margin-bottom: 16px; }
+.sg-viewer-head {
+  display: flex; align-items: center; gap: 10px;
+  padding: 14px 20px; border-bottom: 1px solid var(--border);
+  background: var(--surface2);
+}
+.sg-viewer-tag { font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 20px; }
+.sg-viewer-tag.home    { background: rgba(59,130,246,0.12); color: #1456A0; }
+.sg-viewer-tag.plan    { background: rgba(232,0,61,0.08); color: var(--pink); }
+.sg-viewer-tag.usim    { background: rgba(124,58,237,0.1); color: #5B21B6; }
+.sg-viewer-tag.my      { background: var(--surface3); color: var(--text2); }
+.sg-viewer-tag.flow    { background: rgba(45,191,122,0.1); color: #1A6B3A; }
+.sg-viewer-name { font-size: 14px; font-weight: 700; color: var(--text); }
+.sg-viewer-desc { font-size: 12px; color: var(--text2); margin-left: auto; }
+
+.sg-iframe-wrap {
+  display: flex; justify-content: center;
+  padding: 32px 0 24px;
+  background: #2A2A2C;
+  position: relative;
+}
+.sg-iframe-label {
+  position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+  font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.4);
+  letter-spacing: .06em; text-transform: uppercase;
+}
+.sg-phone-shell {
+  width: 375px; height: 780px;
+  border-radius: 34px; border: 2.5px solid #3A3A3C;
+  overflow: hidden;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.5), 0 4px 12px rgba(0,0,0,0.3);
+  position: relative;
+}
+.sg-phone-notch-bar {
+  position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 110px; height: 28px;
+  background: #1A1A1A; border-radius: 0 0 18px 18px;
+  z-index: 10;
+}
+.sg-iframe {
+  width: 375px; height: 780px;
+  border: none; display: block;
+  background: #FAFAF7;
+}
+
+/* 설명 카드 */
+.sg-desc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+.sg-desc-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 14px 16px; }
+.sg-desc-card-title { font-size: 11px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 10px; }
+.sg-feat-list { display: flex; flex-direction: column; gap: 6px; }
+.sg-feat-item { display: flex; align-items: flex-start; gap: 7px; font-size: 12px; color: var(--text2); line-height: 1.5; }
+.sg-feat-badge { font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 3px; white-space: nowrap; flex-shrink: 0; margin-top: 1px; }
+.sg-feat-badge.new   { background: rgba(45,191,122,0.12); color: #1A6B3A; }
+.sg-feat-badge.fix   { background: rgba(232,0,61,0.08); color: var(--pink); }
+.sg-feat-badge.move  { background: rgba(245,166,35,0.1); color: #8A5200; }
+.sg-feat-badge.merge { background: rgba(59,130,246,0.1); color: #1456A0; }
+.sg-kpi-row { display: flex; flex-wrap: wrap; gap: 5px; }
+.sg-kpi-chip { font-size: 11px; background: var(--surface2); border: 1px solid var(--border2); border-radius: 20px; padding: 3px 10px; color: var(--text2); }
+.sg-req-list { display: flex; flex-direction: column; gap: 5px; }
+.sg-req-item { display: flex; align-items: flex-start; gap: 7px; font-size: 12px; color: var(--text2); }
+.sg-req-id { font-size: 10px; font-weight: 700; color: var(--text3); white-space: nowrap; }
+
+/* 와이어프레임 없을 때 */
+.sg-no-wf {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  height: 300px; gap: 10px; background: #2A2A2C;
+}
+.sg-no-wf-t { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.5); }
+.sg-no-wf-s { font-size: 11px; color: rgba(255,255,255,0.3); text-align: center; line-height: 1.6; }
+
+@media (max-width: 1000px) {
+  .sg-layout { grid-template-columns: 1fr; }
+  .sg-sidebar { position: static; }
+  .sg-nav-list { flex-direction: row; flex-wrap: wrap; }
+}
+@media (max-width: 500px) {
+  .sg-phone-shell, .sg-iframe { width: 320px; }
+  .sg-desc-grid { grid-template-columns: 1fr; }
+}
+
+/* ── 제약/범위 ── */
+.constraint-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.constraint-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 14px 16px; }
+.constraint-label { font-size: 11px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px; }
+.constraint-list { display: flex; flex-direction: column; gap: 5px; }
+.constraint-item { font-size: 12px; color: var(--text2); padding-left: 12px; position: relative; line-height: 1.5; }
+.constraint-item::before { content: '·'; position: absolute; left: 0; color: var(--text3); }
+
+/* ── 반응형 ── */
+@media (max-width: 900px) {
+  .prd-grid { grid-template-columns: 1fr; }
+  .sg-grid { grid-template-columns: repeat(2, 1fr); }
+  .constraint-grid { grid-template-columns: 1fr; }
+  .page-wrap { padding: 24px 20px 60px; }
+}
+@media (max-width: 600px) {
+  .sg-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- 글로벌 헤더 -->
+<header class="ghead">
+  <div class="ghead-logo">알닷 개편 프로젝트 <em>산출물</em></div>
+  <div class="ghead-meta">uplusmvno.com · 2026.04 · v1.0</div>
+</header>
+
+<!-- 탭 네비 -->
+<nav class="tab-nav">
+  <div class="tnav on" onclick="switchTab('prd',this)"><span class="tnav-num">01</span>요구사항 정의서 (PRD)</div>
+  <div class="tnav" onclick="switchTab('ia',this)"><span class="tnav-num">02</span>개편안 IA</div>
+  <div class="tnav" onclick="switchTab('workflow',this)"><span class="tnav-num">03</span>워크플로우</div>
+  <div class="tnav" onclick="switchTab('screen',this)"><span class="tnav-num">04</span>스크린 가이드</div>
+</nav>
+
+<!-- ══════════════════════════════════
+     01. PRD
+══════════════════════════════════ -->
+<div id="tab-prd" class="tab-pane on">
+<div class="page-wrap">
+  <div class="sec-header">
+    <div class="sec-eyebrow">Product Requirements Document</div>
+    <h1 class="sec-title">요구사항 정의서 (PRD)</h1>
+    <p class="sec-desc">알닷(uplusmvno.com) 모바일웹 UX/IA 개편 프로젝트의 요구사항을 정의합니다. 현황 역설계 분석 결과를 기반으로 작성되었습니다.</p>
+  </div>
+
+  <!-- 개요/배경/목표 -->
+  <div class="card">
+    <div class="card-title"><div class="card-title-bar"></div>1. 프로젝트 개요 및 배경</div>
+    <div class="prd-grid">
+      <div class="prd-item">
+        <div class="prd-label">프로젝트명</div>
+        <div class="prd-value">알닷(알뜰폰닷컴) 모바일웹 UX/IA 개편</div>
+      </div>
+      <div class="prd-item">
+        <div class="prd-label">대상 서비스</div>
+        <div class="prd-value">uplusmvno.com (알닷, SPA · React 계열)</div>
+      </div>
+      <div class="prd-item">
+        <div class="prd-label">개편 배경</div>
+        <div class="prd-value">
+          <ul>
+            <li>하단 탭바 5개 ↔ 햄버거 메뉴 7개 간 중복·불일치로 사용자 혼란</li>
+            <li>핵심 전환 액션(유심구매)이 하단탭에 미노출</li>
+            <li>요금제 필터 과부하 → 첫 이용자 진입 장벽</li>
+            <li>가입 플로우 13단계 → 중간 이탈 위험</li>
+            <li>알닷케어·마이페이지 역할 중복으로 구조적 혼란</li>
+          </ul>
+        </div>
+      </div>
+      <div class="prd-item">
+        <div class="prd-label">프로젝트 목표</div>
+        <div class="prd-value">
+          <ul>
+            <li>네비게이션 구조 단순화 (7 depth→5 depth)</li>
+            <li>핵심 전환 경로 (유심구매) 접근성 강화</li>
+            <li>요금제 탐색 UX 개선 → 필터 단순화</li>
+            <li>가입 플로우 13→8단계 압축</li>
+            <li>알닷케어 + 마이페이지 기능 통합</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 제약사항 & 범위 외 -->
+  <div class="card">
+    <div class="card-title"><div class="card-title-bar"></div>2. 제약사항 및 범위 외 항목</div>
+    <div class="constraint-grid">
+      <div class="constraint-card">
+        <div class="constraint-label">제약사항</div>
+        <div class="constraint-list">
+          <div class="constraint-item">현행 SPA(React) 기반 구조 유지 — 서버사이드 렌더링 전환 불포함</div>
+          <div class="constraint-item">LG U+ 브랜드 아이덴티티(컬러·로고) 준수</div>
+          <div class="constraint-item">알닷 캐릭터(모나) 기존 자산 활용</div>
+          <div class="constraint-item">WCAG 2.1 AA 수준 웹접근성 준수</div>
+          <div class="constraint-item">기존 URL 체계 최대한 유지 (SEO 영향 최소화)</div>
+          <div class="constraint-item">모바일 우선 설계 (Mobile First)</div>
+        </div>
+      </div>
+      <div class="constraint-card">
+        <div class="constraint-label">범위 외 항목</div>
+        <div class="constraint-list">
+          <div class="constraint-item">경쟁사 비교 분석 (별도 진행)</div>
+          <div class="constraint-item">백엔드 API 구조 변경</div>
+          <div class="constraint-item">결제 시스템 개편</div>
+          <div class="constraint-item">인터넷/IPTV 상품 영역 (별도 프로젝트)</div>
+          <div class="constraint-item">앱(Native App) 영역</div>
+          <div class="constraint-item">관리자 어드민 페이지</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 일정/마일스톤 -->
+  <div class="card">
+    <div class="card-title"><div class="card-title-bar"></div>3. 일정 및 마일스톤</div>
+    <div class="milestone-list">
+      <div class="ms-item">
+        <span class="ms-phase ph1">분석</span>
+        <div>
+          <div class="ms-title">Phase 1 — 현황 분석 · 요구사항 정의</div>
+          <div class="ms-tasks">스크린샷 수집 · UX/GUI 분석 · 트렌드 수집 · 컨셉 수립 · PRD 작성/확정</div>
+        </div>
+        <span class="ms-hour">36h</span>
+      </div>
+      <div class="ms-item">
+        <span class="ms-phase ph2">설계</span>
+        <div>
+          <div class="ms-title">Phase 2 — IA · UX 설계 · 디자인</div>
+          <div class="ms-tasks">IA 설계 · UX 시나리오 · 와이어프레임 · UX 라이팅 · 디자인 시스템 · 시안 제작</div>
+        </div>
+        <span class="ms-hour">51h</span>
+      </div>
+      <div class="ms-item">
+        <span class="ms-phase ph3">구현</span>
+        <div>
+          <div class="ms-title">Phase 3 — 퍼블리싱 · QA</div>
+          <div class="ms-tasks">마크업 분석 · 공통 컴포넌트 · 주요 화면 마크업 · 크로스브라우저 · 접근성 검수</div>
+        </div>
+        <span class="ms-hour">30h</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 기능 요구사항 -->
+  <div class="card">
+    <div class="card-title"><div class="card-title-bar"></div>4. 기능 요구사항 (MoSCoW 우선순위)</div>
+
+    <div class="req-filter-bar">
+      <div class="rfbtn on" onclick="filterReq('all',this)">전체</div>
+      <div class="rfbtn" onclick="filterReq('NAV',this)">네비게이션</div>
+      <div class="rfbtn" onclick="filterReq('HOME',this)">홈</div>
+      <div class="rfbtn" onclick="filterReq('PLAN',this)">요금제</div>
+      <div class="rfbtn" onclick="filterReq('USIM',this)">유심구매</div>
+      <div class="rfbtn" onclick="filterReq('MY',this)">마이/케어</div>
+      <div class="rfbtn" onclick="filterReq('FLOW',this)">가입플로우</div>
+      <div class="rfbtn" onclick="filterReq('High',this)">🔴 Must</div>
+      <div class="rfbtn" onclick="filterReq('Mid',this)">🟡 Should</div>
+      <div class="rfbtn" onclick="filterReq('Low',this)">🟢 Could</div>
+    </div>
+
+    <div class="req-table-wrap">
+      <table class="req-table" id="reqTable">
+        <thead>
+          <tr>
+            <th>ID</th><th>구분(L1)</th><th>구분(L2)</th><th>대상 페이지</th>
+            <th>요구사항명</th><th style="min-width:200px;">상세 설명</th>
+            <th style="min-width:160px;">수용 기준</th><th>우선순위</th>
+            <th>연관 KPI</th><th>담당</th><th>비고</th>
+          </tr>
+        </thead>
+        <tbody id="reqBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════
+     02. IA
+══════════════════════════════════ -->
+<div id="tab-ia" class="tab-pane">
+<div class="page-wrap">
+  <div class="sec-header">
+    <div class="sec-eyebrow">Information Architecture</div>
+    <h1 class="sec-title">개편안 정보구조 (IA)</h1>
+    <p class="sec-desc">현황 7개 1depth 구조를 5개로 재구성한 개편안 IA입니다. 탭바·햄버거 역할을 분리하고 유사 기능을 통합했습니다.</p>
+  </div>
+
+  <div class="card" style="margin-bottom:14px;">
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <div style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text2);"><span class="ia-badge ia-new">신규</span>신규 추가/격상</div>
+      <div style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text2);"><span class="ia-badge ia-merge">통합</span>기능 통합</div>
+      <div style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text2);"><span class="ia-badge ia-move">이동</span>위치 이동</div>
+      <div style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text2);"><span class="ia-badge ia-exist">유지</span>현행 유지</div>
+    </div>
+  </div>
+
+  <div class="ia-table-wrap">
+    <table class="ia-table" id="iaTable">
+      <thead>
+        <tr>
+          <th>ID</th><th>Depth 1</th><th>Depth 2</th><th>Depth 3</th>
+          <th>화면/메뉴명</th><th>설명</th><th>주요 사용자 목적</th><th>변경</th><th>비고</th>
+        </tr>
+      </thead>
+      <tbody id="iaBody"></tbody>
+    </table>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════
+     03. 워크플로우
+══════════════════════════════════ -->
+<div id="tab-workflow" class="tab-pane">
+<div class="page-wrap">
+  <div class="sec-header">
+    <div class="sec-eyebrow">Workflow</div>
+    <h1 class="sec-title">워크플로우</h1>
+    <p class="sec-desc">전체 서비스 워크플로우와 핵심 기능별 세부 플로우를 정리합니다.</p>
+  </div>
+
+  <div class="wf-legend">
+    <div class="wf-leg-item"><div class="wf-leg-dot" style="background:#1A1A1A;"></div>핵심 단계</div>
+    <div class="wf-leg-item"><div class="wf-leg-dot" style="background:rgba(45,191,122,0.3);border:1px solid rgba(45,191,122,0.5);"></div>신규/개선</div>
+    <div class="wf-leg-item"><div class="wf-leg-dot" style="background:rgba(232,0,61,0.15);border:1px solid rgba(232,0,61,0.3);"></div>이탈 위험/개선 전</div>
+    <div class="wf-leg-item"><div class="wf-leg-dot" style="background:rgba(245,166,35,0.2);border:1px dashed rgba(245,166,35,0.5);"></div>분기/결정</div>
+  </div>
+
+  <!-- 전체 워크플로우 -->
+  <div class="wf-section">
+    <div class="wf-sec-title">
+      전체 서비스 워크플로우
+      <span class="wf-sec-badge" style="background:rgba(26,26,26,0.08);color:var(--text2);">Overview</span>
+    </div>
+    <div class="wf-overall" id="wf-overall"></div>
+  </div>
+
+  <!-- 핵심 기능 워크플로우들 -->
+  <div class="wf-section" id="wf-detail-section"></div>
+
+</div>
+</div>
+
+<!-- ══════════════════════════════════
+     04. 스크린 가이드
+══════════════════════════════════ -->
+<div id="tab-screen" class="tab-pane">
+<div class="page-wrap">
+  <div class="sec-header">
+    <div class="sec-eyebrow">Screen Guide</div>
+    <h1 class="sec-title">스크린 가이드</h1>
+    <p class="sec-desc">개편안 주요 화면별 와이어프레임과 기능 설명, 개선 포인트, 연관 KPI를 함께 확인합니다. 좌측 메뉴에서 화면을 선택하세요.</p>
+  </div>
+
+  <div class="sg-layout">
+    <!-- 좌측 화면 목록 -->
+    <div class="sg-sidebar">
+      <div class="sg-nav-title">화면 목록</div>
+      <div class="sg-nav-list" id="sgNavList"></div>
+    </div>
+
+    <!-- 우측 콘텐츠 -->
+    <div class="sg-main" id="sgMain"></div>
+  </div>
+</div>
+</div>
+
+<script>
+// ══════════════════════════════════
+// 데이터
+// ══════════════════════════════════
+
+// ── 요구사항 데이터 ──
+const reqData = [
+  // NAV
+  { id:'REQ-NAV-001', l1:'네비게이션', l2:'하단탭바', page:'전체', name:'유심구매 탭 격상', desc:'햄버거 전용이던 유심구매를 하단탭 3번째 항목으로 이동. 탭바: 홈·요금제·유심구매·혜택·마이로 재구성.', ac:'하단탭에 유심구매 항목 노출, 탭 클릭 시 유심구매 화면 진입', pri:'High', kpi:'유심구매 전환율', owner:'기획', note:'' },
+  { id:'REQ-NAV-002', l1:'네비게이션', l2:'하단탭바', page:'전체', name:'이벤트→혜택 통합', desc:'독립 탭이던 이벤트를 혜택 탭으로 통합. 혜택 탭 내에서 알닷ONLY·이벤트·제휴카드·파트너스 탭 구성.', ac:'이벤트 콘텐츠가 혜택 탭 하위에 정상 노출', pri:'High', kpi:'혜택 탭 CTR', owner:'기획', note:'' },
+  { id:'REQ-NAV-003', l1:'네비게이션', l2:'하단탭바', page:'전체', name:'알닷케어→마이 통합', desc:'독립 탭이던 알닷케어를 마이 탭 내 서브 영역으로 통합. 마이 탭 진입 시 케어 정보 상단 노출.', ac:'마이 탭 진입 시 데이터 사용량·케어 기능 노출', pri:'High', kpi:'마이탭 사용률', owner:'기획', note:'' },
+  { id:'REQ-NAV-004', l1:'네비게이션', l2:'햄버거메뉴', page:'전체', name:'햄버거 메뉴 역할 분리', desc:'탭바와 중복되는 항목 제거. 햄버거 = 상품전체·인터넷/IPTV·고객지원·공지사항·설정 전용으로 재편.', ac:'햄버거 메뉴에 탭바 중복 항목 미노출, 보조 기능만 노출', pri:'High', kpi:'메뉴 혼란 지표', owner:'기획', note:'' },
+  // HOME
+  { id:'REQ-HOME-001', l1:'홈', l2:'콘텐츠 구성', page:'홈', name:'퀵메뉴 쇼트컷 신설', desc:'홈 배너 하단에 요금제찾기·유심구매·사용량확인·혜택보기 4개 퀵메뉴 추가. 주요 기능 즉시 진입.', ac:'퀵메뉴 4개 노출, 클릭 시 각 해당 화면으로 이동', pri:'High', kpi:'홈 이탈률·CTR', owner:'기획', note:'' },
+  { id:'REQ-HOME-002', l1:'홈', l2:'콘텐츠 구성', page:'홈', name:'내게맞는 요금제 홈 노출', desc:'마이페이지에 있던 요금제 추천 찾기 진입 카드를 홈에도 노출. 요금제 탐색 시작점 다양화.', ac:'홈에 추천 찾기 카드 노출, 클릭 시 /plan 추천 플로우 진입', pri:'Mid', kpi:'요금제 추천 사용률', owner:'기획', note:'' },
+  { id:'REQ-HOME-003', l1:'홈', l2:'배너', page:'홈', name:'메인 배너 1개 집중', desc:'다중 캐러셀 배너를 핵심 1개 배너로 집중. 시선 분산 방지 및 주요 프로모션 강조.', ac:'메인 배너 1개만 노출 (서브 배너는 스크롤 하단 별도 구성)', pri:'Mid', kpi:'배너 CTR', owner:'기획·디자인', note:'' },
+  // PLAN
+  { id:'REQ-PLAN-001', l1:'요금제', l2:'필터', page:'요금제 목록', name:'요금제 필터 단순화', desc:'통신사 다중 체크박스 → 칩 단일 선택으로 압축. 후불/신불 탭 + 카테고리 칩(전체·알닷ONLY·5G·대용량·저가형·무제한)으로 재구성.', ac:'필터 변경 시 목록 즉시 갱신, 칩 1개 선택 시 필터 적용', pri:'High', kpi:'요금제 필터 사용률·이탈률', owner:'기획', note:'' },
+  { id:'REQ-PLAN-002', l1:'요금제', l2:'추천', page:'요금제 목록', name:'내게맞는 요금제 탭 최상단 배치', desc:'현행 /mypage/recommand에 있던 9단계 추천 플로우를 요금제 탭 진입부 배너로 이동.', ac:'요금제 탭 진입 시 추천 배너 최상단 노출, 클릭 시 추천 플로우 진입', pri:'High', kpi:'추천 플로우 진입률', owner:'기획', note:'' },
+  { id:'REQ-PLAN-003', l1:'요금제', l2:'카드', page:'요금제 목록', name:'요금제 카드 정보 위계 정비', desc:'별점·통신사·데이터·가격·할인 정보 위계 재정비. 핵심 정보(데이터·월정액) 강조, 부가 정보 축소.', ac:'카드 내 정보 위계 명확화, 폰트 크기·컬러 위계 구분', pri:'Mid', kpi:'요금제 상세 진입률', owner:'기획·디자인', note:'' },
+  { id:'REQ-PLAN-004', l1:'요금제', l2:'부가서비스', page:'요금제 목록/상세', name:'부가서비스 경로 단일화', desc:'현행 /plan과 /care 양쪽에 분산된 부가서비스를 /plan 단일 경로로 통일.', ac:'부가서비스 진입 경로 /plan 하위로 통일', pri:'Mid', kpi:'-', owner:'기획', note:'' },
+  // USIM
+  { id:'REQ-USIM-001', l1:'유심구매', l2:'구매방식', page:'유심구매', name:'eSIM 구매 옵션 신설', desc:'기존 3종(지금배송·편의점·원칩)에 eSIM 구매 카드 추가. N페이 혜택 연계 노출.', ac:'eSIM 카드 노출, 지원 기기 확인 안내 포함', pri:'High', kpi:'eSIM 개통 전환율', owner:'기획', note:'' },
+  { id:'REQ-USIM-002', l1:'유심구매', l2:'구매방식', page:'유심구매', name:'구매방식 카드형 UI 개선', desc:'구매 방식 4종을 카드형으로 명확히 구분. 인기 태그, 배지, 설명 텍스트로 선택 혼란 제거.', ac:'4종 카드 각각 타이틀·설명·배지 노출', pri:'Mid', kpi:'유심구매 완료율', owner:'기획·디자인', note:'' },
+  // MY
+  { id:'REQ-MY-001', l1:'마이/케어', l2:'케어 통합', page:'마이', name:'케어 사용량 마이 상단 노출', desc:'알닷케어 핵심 정보(데이터 사용량 바)를 마이 탭 프로필 하단에 노출.', ac:'마이 탭 진입 시 현재 데이터 사용량 % 바 노출', pri:'High', kpi:'케어 기능 사용률', owner:'기획', note:'' },
+  { id:'REQ-MY-002', l1:'마이/케어', l2:'케어 통합', page:'마이', name:'케어 쇼트컷 4개 노출', desc:'가입정보·유심변경·납부관리·번호변경을 아이콘 쇼트컷으로 마이 내 노출.', ac:'쇼트컷 4개 노출, 각 클릭 시 해당 기능 페이지 진입', pri:'High', kpi:'케어 기능 이용률', owner:'기획', note:'' },
+  { id:'REQ-MY-003', l1:'마이/케어', l2:'고객지원', page:'마이', name:'고객센터 마이 내 통합', desc:'햄버거 전용이던 고객센터를 마이 하단 메뉴 리스트로 통합.', ac:'마이 하단에 고객센터 메뉴 노출, 클릭 시 /support 이동', pri:'Mid', kpi:'-', owner:'기획', note:'' },
+  // FLOW
+  { id:'REQ-FLOW-001', l1:'가입플로우', l2:'단계 압축', page:'가입플로우', name:'가입 13단계→8단계 압축', desc:'유심+번호 선택 통합, 배송+부가서비스 통합, 약관+결제 통합, 최종확인 5개→1개로 압축.', ac:'가입 완료까지 최대 8단계 이내, 중복 확인 화면 없음', pri:'High', kpi:'가입 완료율·이탈율', owner:'기획', note:'' },
+  { id:'REQ-FLOW-002', l1:'가입플로우', l2:'UX', page:'가입플로우', name:'진행상황 바 시각화', desc:'가입 플로우 상단에 현재 단계 표시 도트 바 노출. 사용자 이탈 방지.', ac:'각 단계 상단에 N/전체 진행 도트 바 상시 노출', pri:'High', kpi:'가입 중간 이탈률', owner:'기획·디자인', note:'' },
+  { id:'REQ-FLOW-003', l1:'가입플로우', l2:'완료', page:'가입 완료', name:'완료 후 케어 온보딩 연결', desc:'가입 완료 화면에서 알닷케어(마이) 바로 진입 CTA 노출. 신규 사용자 온보딩 강화.', ac:'완료 화면에 "마이페이지로 이동" CTA 노출', pri:'Mid', kpi:'가입 후 케어 진입률', owner:'기획', note:'' },
+];
+
+// ── IA 데이터 ──
+const iaData = [
+  // 홈
+  { id:'IA-01', d1:'홈', d2:'', d3:'', name:'홈', desc:'서비스 메인 진입점. 배너·퀵메뉴·추천요금제 제공', purpose:'서비스 전체 탐색 시작', change:'fix', note:'하단탭 1번' },
+  { id:'IA-01-01', d1:'홈', d2:'배너', d3:'', name:'메인 배너', desc:'핵심 프로모션 1개 집중 노출 (개선)', purpose:'주요 이벤트 인지', change:'fix', note:'개선: 다중→1개' },
+  { id:'IA-01-02', d1:'홈', d2:'퀵메뉴', d3:'', name:'빠른 메뉴 쇼트컷', desc:'요금제찾기·유심구매·사용량·혜택 4개 즉시 진입', purpose:'핵심 기능 빠른 접근', change:'new', note:'신규 추가' },
+  { id:'IA-01-03', d1:'홈', d2:'추천', d3:'', name:'내게맞는 요금제 찾기', desc:'/mypage에서 이동. 데이터·예산 기반 요금제 추천 진입', purpose:'개인 맞춤 요금제 탐색', change:'move', note:'이동: /mypage→홈' },
+  { id:'IA-01-04', d1:'홈', d2:'요금제', d3:'', name:'인기 요금제', desc:'실시간 인기 요금제 카드 노출', purpose:'빠른 요금제 비교', change:'exist', note:'' },
+  { id:'IA-01-05', d1:'홈', d2:'혜택', d3:'', name:'알닷ONLY플러스 배너', desc:'알닷ONLY 전용 혜택 상시 노출', purpose:'브랜드 혜택 인지', change:'exist', note:'' },
+  // 요금제
+  { id:'IA-02', d1:'요금제', d2:'', d3:'', name:'요금제', desc:'요금제 목록·필터·추천·상세·가입 전체 포함', purpose:'요금제 탐색 및 가입', change:'fix', note:'하단탭 2번' },
+  { id:'IA-02-01', d1:'요금제', d2:'추천 찾기', d3:'', name:'내게맞는 요금제 찾기', desc:'데이터·예산 기반 9단계 추천 플로우. 탭 최상단 배너로 이동', purpose:'맞춤 요금제 추천 수령', change:'move', note:'이동: /mypage→/plan' },
+  { id:'IA-02-02', d1:'요금제', d2:'요금제 목록', d3:'', name:'요금제 목록', desc:'후불/신불 탭 + 칩 필터로 단순화된 목록', purpose:'조건별 요금제 탐색', change:'fix', note:'필터 개선' },
+  { id:'IA-02-02-01', d1:'요금제', d2:'요금제 목록', d3:'필터', name:'필터', desc:'후불/신불·알닷ONLY·5G·대용량·저가형·무제한 칩 선택', purpose:'요금제 조건 필터링', change:'fix', note:'개선: 다중체크→칩' },
+  { id:'IA-02-03', d1:'요금제', d2:'요금제 상세', d3:'', name:'요금제 상세', desc:'데이터·통화·가격·혜택·리뷰·유사요금제 탭 구성', purpose:'요금제 상세 정보 확인', change:'fix', note:'탭 구조 신규' },
+  { id:'IA-02-03-01', d1:'요금제', d2:'요금제 상세', d3:'가입하기', name:'가입하기 CTA', desc:'상단 고정 가입하기 버튼', purpose:'요금제 가입 진입', change:'new', note:'상단 고정 신규' },
+  { id:'IA-02-04', d1:'요금제', d2:'가입 플로우', d3:'', name:'가입 플로우 (8단계)', desc:'요금제확인→본인인증→유심+번호→배송+부가→약관+결제→최종확인→완료', purpose:'요금제 신규 가입', change:'fix', note:'개선: 13→8단계' },
+  { id:'IA-02-05', d1:'요금제', d2:'부가서비스', d3:'', name:'부가서비스', desc:'/care에서 통합. 단일 경로로 정비', purpose:'부가서비스 신청·관리', change:'merge', note:'통합: /care+/plan' },
+  // 유심구매
+  { id:'IA-03', d1:'유심구매', d2:'', d3:'', name:'유심구매', desc:'유심 구매방식 선택. 하단탭 격상', purpose:'유심 구매 및 개통', change:'new', note:'하단탭 3번 격상' },
+  { id:'IA-03-01', d1:'유심구매', d2:'지금배송', d3:'', name:'지금배송', desc:'택배 배송으로 유심 수령 (1~2일)', purpose:'유심 택배 구매', change:'exist', note:'' },
+  { id:'IA-03-02', d1:'유심구매', d2:'편의점구매', d3:'', name:'편의점 구매', desc:'CU·GS25·세븐일레븐 근처 수령', purpose:'유심 즉시 수령', change:'exist', note:'' },
+  { id:'IA-03-03', d1:'유심구매', d2:'유심원칩', d3:'', name:'유심원칩 구매', desc:'유심+요금제 일체형 구매', purpose:'간편 개통', change:'exist', note:'' },
+  { id:'IA-03-04', d1:'유심구매', d2:'eSIM', d3:'', name:'eSIM 개통', desc:'실물 유심 없이 즉시 개통. N페이 혜택 연계', purpose:'eSIM 즉시 개통', change:'new', note:'신규 추가' },
+  // 혜택
+  { id:'IA-04', d1:'혜택', d2:'', d3:'', name:'혜택', desc:'이벤트·알닷ONLY·제휴카드·파트너스 통합', purpose:'혜택·이벤트 탐색', change:'merge', note:'이벤트탭 통합' },
+  { id:'IA-04-01', d1:'혜택', d2:'이벤트', d3:'', name:'이벤트', desc:'기존 이벤트 탭 콘텐츠 통합. 통신사별 필터', purpose:'진행중 이벤트 확인', change:'merge', note:'이동: 독립탭→혜택' },
+  { id:'IA-04-02', d1:'혜택', d2:'알닷ONLY', d3:'', name:'알닷ONLY 혜택', desc:'알닷ONLY 전용 혜택 목록', purpose:'알닷 전용 혜택 확인', change:'exist', note:'' },
+  { id:'IA-04-03', d1:'혜택', d2:'제휴카드', d3:'', name:'제휴카드', desc:'제휴 카드 혜택 안내', purpose:'카드 혜택 비교', change:'exist', note:'' },
+  { id:'IA-04-04', d1:'혜택', d2:'파트너스', d3:'', name:'파트너스', desc:'제휴사 혜택 목록', purpose:'파트너 서비스 이용', change:'exist', note:'' },
+  // 마이
+  { id:'IA-05', d1:'마이', d2:'', d3:'', name:'마이', desc:'알닷케어 통합. 사용량·케어·신청현황·고객지원 포함', purpose:'개인 서비스 관리', change:'merge', note:'알닷케어 통합' },
+  { id:'IA-05-01', d1:'마이', d2:'알닷케어', d3:'', name:'알닷케어', desc:'실시간 사용량·납부·번호변경·유심변경. 마이 내 통합', purpose:'이용 중인 서비스 관리', change:'merge', note:'이동: 독립탭→마이' },
+  { id:'IA-05-01-01', d1:'마이', d2:'알닷케어', d3:'실시간 사용량', name:'실시간 사용량', desc:'데이터·통화·문자 실시간 사용량 확인', purpose:'사용량 모니터링', change:'exist', note:'' },
+  { id:'IA-05-01-02', d1:'마이', d2:'알닷케어', d3:'납부관리', name:'납부관리', desc:'청구 내역·즉시수납 기능', purpose:'요금 납부 관리', change:'exist', note:'' },
+  { id:'IA-05-01-03', d1:'마이', d2:'알닷케어', d3:'번호/유심변경', name:'번호·유심변경', desc:'번호이동·유심교체 기능', purpose:'개통 정보 변경', change:'exist', note:'' },
+  { id:'IA-05-02', d1:'마이', d2:'신청현황', d3:'', name:'신청현황', desc:'모바일·인터넷·부가·USIM 신청 건 조회', purpose:'신청 내역 확인', change:'exist', note:'' },
+  { id:'IA-05-03', d1:'마이', d2:'쿠폰함', d3:'', name:'쿠폰함', desc:'보유 쿠폰 목록 및 사용', purpose:'쿠폰 관리', change:'exist', note:'' },
+  { id:'IA-05-04', d1:'마이', d2:'관심상품', d3:'', name:'관심·최근 상품', desc:'찜한 상품·최근 본 상품 목록', purpose:'관심 요금제 재탐색', change:'exist', note:'' },
+  { id:'IA-05-05', d1:'마이', d2:'고객지원', d3:'', name:'고객지원', desc:'1:1문의·FAQ·공지사항. 햄버거에서 마이로 통합', purpose:'고객 문의 및 지원', change:'merge', note:'이동: 햄버거→마이' },
+];
+
+// ── 워크플로우 데이터 ──
+const wfOverall = [
+  { phase:'진입', badge:'bg:#E8F4FF;color:#1456A0', steps:[
+    { name:'홈 접속', sub:'배너·퀵메뉴', cls:'' },
+  ]},
+  { phase:'탐색', badge:'bg:rgba(124,58,237,0.1);color:#5B21B6', steps:[
+    { name:'요금제 탐색', sub:'탭 or 퀵메뉴', cls:'' },
+    { name:'필터 적용', sub:'칩 선택', cls:'new-step' },
+    { name:'추천 찾기', sub:'/plan 진입부', cls:'new-step' },
+  ]},
+  { phase:'결정', badge:'bg:rgba(245,166,35,0.1);color:#8A5200', steps:[
+    { name:'요금제 상세', sub:'탭 구조', cls:'' },
+    { name:'비교하기', sub:'인라인', cls:'new-step' },
+  ]},
+  { phase:'전환', badge:'bg:rgba(232,0,61,0.08);color:#C8003D', steps:[
+    { name:'가입하기', sub:'상단 고정 CTA', cls:'highlight' },
+    { name:'유심구매', sub:'탭 직접 진입', cls:'highlight' },
+  ]},
+  { phase:'완료', badge:'bg:rgba(45,191,122,0.1);color:#1A6B3A', steps:[
+    { name:'가입 완료', sub:'8단계', cls:'new-step' },
+    { name:'케어 진입', sub:'완료→마이 연결', cls:'new-step' },
+  ]},
+];
+
+const wfDetails = [
+  {
+    title:'요금제 가입 플로우 (개선안 · 8단계)',
+    badge:'개선: 13→8단계',
+    badgeStyle:'background:rgba(232,0,61,0.08);color:var(--pink)',
+    steps:[
+      { name:'요금제 선택', sub:'목록→상세', cls:'' },
+      { name:'본인인증', sub:'휴대폰/PASS', cls:'' },
+      { name:'유심+번호', sub:'통합 1step', cls:'new-step' },
+      { name:'배송+부가', sub:'통합 1step', cls:'new-step' },
+      { name:'약관+결제', sub:'통합 1step', cls:'new-step' },
+      { name:'최종확인', sub:'요약 1page', cls:'new-step' },
+      { name:'완료', sub:'케어 진입 유도', cls:'highlight' },
+    ],
+    note:'<b>개선 핵심:</b> 관련 입력 단계 묶기 → 3단계 압축 | 최종확인 5개→1개 | 완료→케어 온보딩 연결'
+  },
+  {
+    title:'내게 맞는 요금제 찾기 플로우',
+    badge:'위치 이동: /mypage→/plan',
+    badgeStyle:'background:rgba(245,166,35,0.1);color:#8A5200',
+    steps:[
+      { name:'요금제 탭', sub:'최상단 배너', cls:'new-step' },
+      { name:'데이터 사용량', sub:'선택', cls:'' },
+      { name:'통화 패턴', sub:'선택', cls:'' },
+      { name:'5G 필요?', sub:'분기', cls:'' },
+      { name:'예산', sub:'선택', cls:'' },
+      { name:'부가기능', sub:'선택', cls:'' },
+      { name:'추천 결과', sub:'요금제 직접 연결', cls:'new-step' },
+    ],
+    note:'<b>개선 핵심:</b> /mypage/recommand → /plan 진입부 이동 | 홈 퀵메뉴에서도 진입 가능 | 결과→상세 직접 연결'
+  },
+  {
+    title:'유심구매 플로우',
+    badge:'탭 격상',
+    badgeStyle:'background:rgba(124,58,237,0.1);color:#5B21B6',
+    steps:[
+      { name:'유심구매 탭', sub:'하단탭 직접 진입', cls:'new-step' },
+      { name:'구매방식 선택', sub:'지금배송/편의점/원칩/eSIM', cls:'' },
+      { name:'요금제 선택', sub:'연계 이동', cls:'' },
+      { name:'본인인증', sub:'', cls:'' },
+      { name:'정보 입력', sub:'배송지 등', cls:'' },
+      { name:'완료', sub:'', cls:'highlight' },
+    ],
+    note:'<b>개선 핵심:</b> 햄버거→탭바 격상으로 접근성 향상 | eSIM 신규 옵션 추가 | 구매방식 선택 후 요금제 플로우 자연 연결'
+  },
+  {
+    title:'마이/알닷케어 진입 플로우',
+    badge:'알닷케어 통합',
+    badgeStyle:'background:rgba(59,130,246,0.1);color:#1456A0',
+    steps:[
+      { name:'마이 탭', sub:'하단탭 5번', cls:'' },
+      { name:'프로필+케어', sub:'사용량 바 상단 노출', cls:'new-step' },
+      { name:'빠른 기능', sub:'가입정보/유심/납부/번호', cls:'new-step' },
+      { name:'신청현황', sub:'모바일·인터넷·USIM', cls:'' },
+      { name:'고객지원', sub:'마이 내 통합', cls:'new-step' },
+    ],
+    note:'<b>개선 핵심:</b> 독립 탭이던 알닷케어 → 마이 내 통합 | 사용량 즉시 확인 | 고객지원 접근성 향상'
+  },
+];
+
+// ── 스크린 가이드 데이터 (iframe 방식) ──
+const sgData = [
+  {
+    id:'home', tag:'home', tagLabel:'홈',
+    name:'홈 (개선안)',
+    wfPage:'home',  // 와이어프레임 페이지 파라미터
+    desc:'서비스 메인 진입점. 배너 1개 집중, 퀵메뉴 쇼트컷 신규 추가, 내게맞는 요금제 찾기 카드 노출.',
+    navDot:'#3B82F6',
+    features:[
+      { cls:'fix',  label:'메인 배너 1개 집중 (다중 캐러셀→단일 핵심 배너)' },
+      { cls:'new',  label:'빠른 메뉴 쇼트컷 4개 신규 추가 (요금제찾기·유심구매·사용량·혜택)' },
+      { cls:'move', label:'내게맞는 요금제 찾기 카드 (홈 노출)' },
+      { cls:'fix',  label:'알닷ONLY플러스 상시 배너' },
+      { cls:'fix',  label:'인기 요금제 카드 — 클릭 시 상세 연결' },
+    ],
+    kpi:['홈 이탈률', '퀵메뉴 CTR', '요금제 탐색 진입률'],
+    reqs:['REQ-HOME-001','REQ-HOME-002','REQ-HOME-003'],
+  },
+  {
+    id:'plan', tag:'plan', tagLabel:'요금제',
+    name:'요금제 목록 (개선안)',
+    wfPage:'plan',
+    desc:'내게맞는 요금제 배너 최상단 배치, 필터 단순화(칩 방식), 카드 클릭 시 상세 연결.',
+    navDot:'#E8003D',
+    features:[
+      { cls:'move', label:'내게맞는 요금제 찾기 최상단 배너로 이동 (/mypage→/plan)' },
+      { cls:'fix',  label:'필터 단순화 — 다중 체크박스→칩 단일 선택' },
+      { cls:'fix',  label:'요금제 카드 정보 위계 재정비 (핵심 정보 강조)' },
+      { cls:'new',  label:'카드 클릭→상세→가입 자연 연결' },
+    ],
+    kpi:['필터 사용률', '요금제 상세 진입률', '가입 전환율'],
+    reqs:['REQ-PLAN-001','REQ-PLAN-002','REQ-PLAN-003'],
+  },
+  {
+    id:'detail', tag:'plan', tagLabel:'요금제 상세',
+    name:'요금제 상세 + 가입',
+    wfPage:'detail',
+    desc:'가입하기 버튼 상단 고정, 탭 구조로 정보 분리, 비교하기 인라인 노출.',
+    navDot:'#E8003D',
+    features:[
+      { cls:'new',  label:'가입하기 버튼 상단 고정 (스크롤 관계없이 항상 노출)' },
+      { cls:'new',  label:'탭 구조 — 제공혜택·부가서비스·사용자리뷰·유사요금제' },
+      { cls:'new',  label:'비교하기 인라인 노출 (별도 페이지 이동 없음)' },
+      { cls:'fix',  label:'혜택 정보 구조화 노출' },
+    ],
+    kpi:['가입하기 버튼 CTR', '상세 체류시간', '비교 기능 사용률'],
+    reqs:['REQ-PLAN-003'],
+  },
+  {
+    id:'flow', tag:'flow', tagLabel:'가입 플로우',
+    name:'가입 플로우 (8단계)',
+    wfPage:'flow',
+    desc:'13단계→8단계 압축. 진행 상황 바 시각화, 관련 입력 통합, 완료 후 케어 온보딩 연결.',
+    navDot:'#2DBF7A',
+    features:[
+      { cls:'fix',  label:'진행 상황 도트 바 상단 고정 (N/전체 표시)' },
+      { cls:'new',  label:'유심+번호 선택 통합 (2step→1step)' },
+      { cls:'new',  label:'배송+부가서비스 통합 (2step→1step)' },
+      { cls:'new',  label:'약관+결제 통합 (2step→1step)' },
+      { cls:'new',  label:'최종 확인 1개로 통합 (5개 화면→요약 1페이지)' },
+      { cls:'new',  label:'가입 완료→알닷케어(마이) 바로 진입 유도' },
+    ],
+    kpi:['가입 완료율', '중간 이탈률', '완료 후 케어 진입률'],
+    reqs:['REQ-FLOW-001','REQ-FLOW-002','REQ-FLOW-003'],
+  },
+  {
+    id:'usim', tag:'usim', tagLabel:'유심구매',
+    name:'유심구매 (탭 격상)',
+    wfPage:'usim',
+    desc:'햄버거 전용→하단탭 3번째 격상. eSIM 신규 추가, 4종 구매방식 카드형 명확화.',
+    navDot:'#7C3AED',
+    features:[
+      { cls:'new',  label:'하단탭 3번째 자리 격상 (햄버거 전용→탭바)' },
+      { cls:'new',  label:'eSIM 구매 옵션 신규 추가 — N페이 혜택 연계' },
+      { cls:'fix',  label:'4종 구매방식 카드형 명확화 (지금배송·편의점·원칩·eSIM)' },
+      { cls:'fix',  label:'구매 전 확인사항 하단 통합 안내' },
+    ],
+    kpi:['유심구매 접근률', 'eSIM 전환율', '구매 완료율'],
+    reqs:['REQ-NAV-001','REQ-USIM-001','REQ-USIM-002'],
+  },
+  {
+    id:'my', tag:'my', tagLabel:'마이',
+    name:'마이 (알닷케어 통합)',
+    wfPage:'my',
+    desc:'알닷케어 독립탭→마이 통합. 사용량 바 상단 노출, 케어 쇼트컷 4개, 고객센터 통합.',
+    navDot:'#6A6860',
+    features:[
+      { cls:'merge', label:'알닷케어 탭→마이 내 서브 영역으로 통합' },
+      { cls:'move',  label:'실시간 데이터 사용량 바 마이 상단 노출' },
+      { cls:'new',   label:'케어 쇼트컷 4개 — 가입정보·유심변경·납부관리·번호변경' },
+      { cls:'merge', label:'고객센터 햄버거→마이 하단 메뉴 통합' },
+    ],
+    kpi:['마이탭 사용률', '케어 기능 이용률', '고객지원 접근률'],
+    reqs:['REQ-NAV-003','REQ-MY-001','REQ-MY-002','REQ-MY-003'],
+  },
+];
+
+// ══════════════════════════════════
+// 렌더링
+// ══════════════════════════════════
+
+// 요구사항 테이블
+function renderReq(filter) {
+  const priMap = { High:'pri-high', Mid:'pri-mid', Low:'pri-low' };
+  const priLabel = { High:'🔴 Must', Mid:'🟡 Should', Low:'🟢 Could' };
+  const filtered = filter === 'all' ? reqData :
+    reqData.filter(r => r.l1.includes(filter) || r.l2.includes(filter) || r.page.includes(filter) || r.pri === filter || r.id.includes(filter));
+  document.getElementById('reqBody').innerHTML = filtered.map(r => `
+    <tr>
+      <td><span class="req-id">${r.id}</span></td>
+      <td style="font-size:12px;font-weight:600;">${r.l1}</td>
+      <td style="font-size:12px;color:var(--text2);">${r.l2}</td>
+      <td><span class="req-page">${r.page}</span></td>
+      <td style="font-size:12px;font-weight:600;color:var(--text);">${r.name}</td>
+      <td style="font-size:12px;color:var(--text2);">${r.desc}</td>
+      <td style="font-size:12px;color:var(--text2);">${r.ac}</td>
+      <td><span class="req-pri ${priMap[r.pri]}">${priLabel[r.pri]}</span></td>
+      <td style="font-size:11px;color:var(--text2);">${r.kpi}</td>
+      <td style="font-size:12px;">${r.owner}</td>
+      <td style="font-size:11px;color:var(--text3);">${r.note}</td>
+    </tr>`).join('');
+}
+
+function filterReq(val, btn) {
+  document.querySelectorAll('.rfbtn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  renderReq(val);
+}
+
+// IA 테이블
+function renderIA() {
+  const changeMap = { new:'ia-new', merge:'ia-merge', move:'ia-move', exist:'ia-exist', fix:'ia-exist' };
+  const changeLabel = { new:'신규', merge:'통합', move:'이동', exist:'유지', fix:'개선' };
+  let prevD1 = '', prevD2 = '';
+  document.getElementById('iaBody').innerHTML = iaData.map(r => {
+    const isD1 = r.d1 !== prevD1;
+    const isD2 = r.d2 !== prevD2 && r.d2 !== '';
+    prevD1 = r.d1; prevD2 = r.d2;
+    const depth = !r.d2 ? 'ia-d1' : !r.d3 ? 'ia-d2' : 'ia-d3';
+    const rowCls = !r.d2 ? 'ia-row-d1' : !r.d3 ? 'ia-row-d2' : '';
+    return `<tr class="${rowCls}">
+      <td><span class="ia-id">${r.id}</span></td>
+      <td style="font-size:12px;font-weight:600;color:var(--text2);">${r.d1}</td>
+      <td style="font-size:12px;color:var(--text2);">${r.d2}</td>
+      <td style="font-size:12px;color:var(--text3);">${r.d3}</td>
+      <td><span class="${depth}">${r.name}</span></td>
+      <td style="font-size:12px;color:var(--text2);line-height:1.5;">${r.desc}</td>
+      <td style="font-size:12px;color:var(--text2);">${r.purpose}</td>
+      <td><span class="ia-badge ${changeMap[r.change]}">${changeLabel[r.change]}</span></td>
+      <td style="font-size:11px;color:var(--text3);">${r.note}</td>
+    </tr>`;
+  }).join('');
+}
+
+// 워크플로우
+function renderWorkflow() {
+  // 전체
+  const oc = document.getElementById('wf-overall');
+  oc.innerHTML = wfOverall.map(ph => `
+    <div class="wf-phase open">
+      <div class="wf-phase-head" onclick="togglePhase(this)">
+        <span class="ms-phase" style="${ph.badge}">${ph.phase}</span>
+        <span class="wf-phase-name">${ph.steps.map(s=>s.name).join(' → ')}</span>
+        <span class="wf-phase-arrow">▼</span>
+      </div>
+      <div class="wf-phase-body">
+        <div class="wf-steps">
+          ${ph.steps.map((s,i) => `
+            ${i>0?'<span class="wf-arr">›</span>':''}
+            <div class="wf-step ${s.cls}">
+              <div class="wf-step-num">${ph.phase}</div>
+              <div class="wf-step-name">${s.name}</div>
+              ${s.sub?`<div class="wf-step-sub">${s.sub}</div>`:''}
+            </div>`).join('')}
+        </div>
+      </div>
+    </div>`).join('');
+
+  // 상세
+  const dc = document.getElementById('wf-detail-section');
+  dc.innerHTML = `<div class="wf-sec-title" style="margin-top:32px;">핵심 기능 워크플로우</div>` +
+    wfDetails.map(wf => `
+    <div class="wf-phase open" style="margin-bottom:12px;">
+      <div class="wf-phase-head" onclick="togglePhase(this)">
+        <span class="wf-sec-badge" style="${wf.badgeStyle}">${wf.badge}</span>
+        <span class="wf-phase-name">${wf.title}</span>
+        <span class="wf-phase-arrow">▼</span>
+      </div>
+      <div class="wf-phase-body">
+        <div class="wf-steps" style="flex-wrap:wrap;gap:8px;">
+          ${wf.steps.map((s,i) => `
+            ${i>0?'<span class="wf-arr">›</span>':''}
+            <div class="wf-step ${s.cls}">
+              <div class="wf-step-num">${i+1}</div>
+              <div class="wf-step-name">${s.name}</div>
+              ${s.sub?`<div class="wf-step-sub">${s.sub}</div>`:''}
+            </div>`).join('')}
+        </div>
+        <div class="wf-note">${wf.note}</div>
+      </div>
+    </div>`).join('');
+}
+
+function togglePhase(el) {
+  el.closest('.wf-phase').classList.toggle('open');
+}
+
+// 스크린 가이드 (iframe 방식)
+function renderSG() {
+  const badgeLabel = { fix:'개선', new:'신규', move:'이동', merge:'통합' };
+
+  // 좌측 네비
+  document.getElementById('sgNavList').innerHTML = sgData.map((s,i) => `
+    <div class="sg-nav-item ${i===0?'on':''}" onclick="switchSG('${s.id}',this)">
+      <div class="sg-nav-dot" style="background:${s.navDot};"></div>
+      <div>
+        <div class="sg-nav-name">${s.name}</div>
+        <div class="sg-nav-sub">${s.features.length}개 개선 포인트</div>
+      </div>
+    </div>`).join('');
+
+  // 우측 패널들
+  document.getElementById('sgMain').innerHTML = sgData.map((s,i) => {
+    const relReqs = reqData.filter(r => s.reqs.includes(r.id));
+    return `
+    <div class="sg-screen-panel ${i===0?'on':''}" id="sgp-${s.id}">
+      <!-- 뷰어 -->
+      <div class="sg-viewer">
+        <div class="sg-viewer-head">
+          <span class="sg-viewer-tag ${s.tag}">${s.tagLabel}</span>
+          <span class="sg-viewer-name">${s.name}</span>
+          <span class="sg-viewer-desc">${s.desc}</span>
+        </div>
+        <div class="sg-iframe-wrap">
+          <div class="sg-iframe-label">375 × 780 · 모바일</div>
+          <div class="sg-phone-shell">
+            <div class="sg-phone-notch-bar"></div>
+            <iframe
+              class="sg-iframe"
+              src="aldot_wireframe_v2.html#${s.wfPage}"
+              id="iframe-${s.id}"
+              title="${s.name} 와이어프레임"
+              loading="lazy"
+            ></iframe>
+          </div>
+        </div>
+      </div>
+
+      <!-- 설명 카드 -->
+      <div class="sg-desc-grid">
+        <div class="sg-desc-card">
+          <div class="sg-desc-card-title">개선 포인트</div>
+          <div class="sg-feat-list">
+            ${s.features.map(f=>`
+              <div class="sg-feat-item">
+                <span class="sg-feat-badge ${f.cls}">${badgeLabel[f.cls]||f.cls}</span>
+                <span>${f.label}</span>
+              </div>`).join('')}
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div class="sg-desc-card">
+            <div class="sg-desc-card-title">연관 KPI</div>
+            <div class="sg-kpi-row">
+              ${s.kpi.map(k=>`<span class="sg-kpi-chip">${k}</span>`).join('')}
+            </div>
+          </div>
+          <div class="sg-desc-card">
+            <div class="sg-desc-card-title">연관 요구사항</div>
+            <div class="sg-req-list">
+              ${relReqs.length ? relReqs.map(r=>`
+                <div class="sg-req-item">
+                  <span class="sg-req-id">${r.id}</span>
+                  <span>${r.name}</span>
+                </div>`).join('') : '<div style="font-size:12px;color:var(--text3);">-</div>'}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function switchSG(id, el) {
+  document.querySelectorAll('.sg-nav-item').forEach(n => n.classList.remove('on'));
+  document.querySelectorAll('.sg-screen-panel').forEach(p => p.classList.remove('on'));
+  if (el) el.classList.add('on');
+  const panel = document.getElementById('sgp-'+id);
+  if (panel) panel.classList.add('on');
+
+  // iframe 로드 — src 재설정으로 해당 페이지 강제 이동
+  const s = sgData.find(d => d.id === id);
+  if (s) {
+    const iframe = document.getElementById('iframe-'+id);
+    if (iframe) {
+      // 이미 로드된 iframe에 postMessage로 페이지 전환 요청
+      try {
+        iframe.contentWindow.postMessage({ goPage: s.wfPage }, '*');
+      } catch(e) {
+        // cross-origin 차단 시 src 재설정 (fallback)
+        iframe.src = 'aldot_wireframe_v2.html';
+      }
+    }
+  }
+}
+
+// 탭 전환
+function switchTab(id, el) {
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.tnav').forEach(n => n.classList.remove('on'));
+  document.getElementById('tab-'+id).classList.add('on');
+  el.classList.add('on');
+}
+
+// 초기화
+renderReq('all');
+renderIA();
+renderWorkflow();
+renderSG();
+</script>
+</body>
+</html>
